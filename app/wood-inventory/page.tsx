@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { 
   Search, 
@@ -39,21 +39,39 @@ interface WoodProduct {
 }
 
 const initialWoodProducts: WoodProduct[] = [
-  { id: 1, name: 'Segun Wood Log', category: 'Hardwood', subCategory: 'Segun', carNo: '1', width: 24, length: 12, cft: 3.00000, description: 'Premium grade Segun wood log for furniture', price: 1200, stock: 150, unit: 'cu ft', image: 'https://picsum.photos/seed/segun/200/200' },
-  { id: 2, name: 'Mahogany Plank', category: 'Hardwood', subCategory: 'Mahogany', carNo: '1', width: 12, length: 8, cft: 0.50000, description: 'Standard mahogany plank, seasoned', price: 950, stock: 80, unit: 'cu ft', image: 'https://picsum.photos/seed/mahogany/200/200' },
-  { id: 3, name: 'Gamari Beam', category: 'Softwood', subCategory: 'Gamari', carNo: '2', width: 18, length: 10, cft: 1.40625, description: 'Local gamari wood beam for construction', price: 650, stock: 200, unit: 'cu ft', image: 'https://picsum.photos/seed/gamari/200/200' },
-  { id: 4, name: 'Teak Square', category: 'Hardwood', subCategory: 'Teak', carNo: '2', width: 20, length: 6, cft: 1.04167, description: 'Imported teak wood square block', price: 1500, stock: 45, unit: 'cu ft', image: 'https://picsum.photos/seed/teak/200/200' },
-  { id: 5, name: 'Plywood Sheet', category: 'Board', subCategory: 'Plywood', carNo: '3', width: 48, length: 8, cft: 8.00000, description: 'Waterproof 12mm plywood sheet', price: 45, stock: 500, unit: 'sq ft', image: 'https://picsum.photos/seed/plywood/200/200' },
-  { id: 6, name: 'MDF Board', category: 'Board', subCategory: 'MDF', carNo: '4', width: 48, length: 8, cft: 8.00000, description: 'Standard MDF board for interior', price: 35, stock: 320, unit: 'sq ft', image: 'https://picsum.photos/seed/mdf/200/200' },
-  { id: 7, name: 'Pine Plank', category: 'Softwood', subCategory: 'Pine', carNo: '5', width: 10, length: 12, cft: 0.52083, description: 'Seasoned pine plank for framing', price: 450, stock: 120, unit: 'cu ft', image: 'https://picsum.photos/seed/pine/200/200' },
-  { id: 8, name: 'Cedar Beam', category: 'Softwood', subCategory: 'Cedar', carNo: '5', width: 14, length: 14, cft: 1.19097, description: 'Aromatic cedar beam for closets', price: 850, stock: 60, unit: 'cu ft', image: 'https://picsum.photos/seed/cedar/200/200' },
+  { id: 1, name: 'Segun Wood Log', category: 'Hardwood', subCategory: '101', carNo: '1', width: 24, length: 12, cft: 3.00000, description: 'Premium grade Segun wood log for furniture', price: 1200, stock: 150, unit: 'cu ft', image: 'https://picsum.photos/seed/segun/200/200' },
+  { id: 2, name: 'Mahogany Plank', category: 'Hardwood', subCategory: '102', carNo: '1', width: 12, length: 8, cft: 0.50000, description: 'Standard mahogany plank, seasoned', price: 950, stock: 80, unit: 'cu ft', image: 'https://picsum.photos/seed/mahogany/200/200' },
+  { id: 3, name: 'Gamari Beam', category: 'Softwood', subCategory: '201', carNo: '2', width: 18, length: 10, cft: 1.40625, description: 'Local gamari wood beam for construction', price: 650, stock: 200, unit: 'cu ft', image: 'https://picsum.photos/seed/gamari/200/200' },
+  { id: 4, name: 'Teak Square', category: 'Hardwood', subCategory: '103', carNo: '2', width: 20, length: 6, cft: 1.04167, description: 'Imported teak wood square block', price: 1500, stock: 45, unit: 'cu ft', image: 'https://picsum.photos/seed/teak/200/200' },
+  { id: 5, name: 'Plywood Sheet', category: 'Board', subCategory: '301', carNo: '3', width: 48, length: 8, cft: 8.00000, description: 'Waterproof 12mm plywood sheet', price: 45, stock: 500, unit: 'sq ft', image: 'https://picsum.photos/seed/plywood/200/200' },
+  { id: 6, name: 'MDF Board', category: 'Board', subCategory: '401', carNo: '4', width: 48, length: 8, cft: 8.00000, description: 'Standard MDF board for interior', price: 35, stock: 320, unit: 'sq ft', image: 'https://picsum.photos/seed/mdf/200/200' },
+  { id: 7, name: 'Pine Plank', category: 'Softwood', subCategory: '202', carNo: '5', width: 10, length: 12, cft: 0.52083, description: 'Seasoned pine plank for framing', price: 450, stock: 120, unit: 'cu ft', image: 'https://picsum.photos/seed/pine/200/200' },
+  { id: 8, name: 'Cedar Beam', category: 'Softwood', subCategory: '203', carNo: '5', width: 14, length: 14, cft: 1.19097, description: 'Aromatic cedar beam for closets', price: 850, stock: 60, unit: 'cu ft', image: 'https://picsum.photos/seed/cedar/200/200' },
 ]
 
 export default function WoodInventoryPage() {
-  const [products, setProducts] = useState<WoodProduct[]>(initialWoodProducts)
+  const [products, setProducts] = useState<WoodProduct[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('wood_inventory');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse wood inventory', e);
+        }
+      }
+    }
+    return initialWoodProducts;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('wood_inventory', JSON.stringify(products));
+  }, [products]);
+
   const [searchTerm, setSearchTerm] = useState('')
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
+
   const [formData, setFormData] = useState<Partial<WoodProduct>>({
     name: '',
     category: 'Hardwood',
@@ -189,6 +207,7 @@ export default function WoodInventoryPage() {
                 <tr>
                   <th className="px-6 py-4 font-semibold">Product</th>
                   <th className="px-6 py-4 font-semibold">Category</th>
+                  <th className="px-6 py-4 font-semibold">Tree No</th>
                   <th className="px-6 py-4 font-semibold">Car No</th>
                   <th className="px-6 py-4 font-semibold">Dimensions (W&quot; x L&apos;)</th>
                   <th className="px-6 py-4 font-semibold">CFT</th>
@@ -222,6 +241,9 @@ export default function WoodInventoryPage() {
                         {product.category}
                       </span>
                     </td>
+                    <td className="px-6 py-4 text-sm font-bold text-emerald-600">
+                      {product.subCategory}
+                    </td>
                     <td className="px-6 py-4 text-sm font-medium text-slate-600">
                       {product.carNo}
                     </td>
@@ -251,7 +273,7 @@ export default function WoodInventoryPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm font-bold text-slate-900">
-                      ${product.price}
+                      ৳{product.price}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-1">
@@ -334,7 +356,7 @@ export default function WoodInventoryPage() {
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700">Sub Category</label>
+                      <label className="text-sm font-bold text-slate-700">Tree No</label>
                       <input 
                         type="text"
                         name="subCategory"

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { 
   Search, 
@@ -45,7 +45,24 @@ const initialFurnitureProducts: FurnitureProduct[] = [
 ]
 
 export default function FurnitureInventoryPage() {
-  const [products, setProducts] = useState<FurnitureProduct[]>(initialFurnitureProducts)
+  const [products, setProducts] = useState<FurnitureProduct[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('furniture_inventory');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse furniture inventory', e);
+        }
+      }
+    }
+    return initialFurnitureProducts;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('furniture_inventory', JSON.stringify(products));
+  }, [products]);
+
   const [searchTerm, setSearchTerm] = useState('')
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)

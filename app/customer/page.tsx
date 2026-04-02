@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
-import { Search, Plus, UserPlus, Phone, MapPin, MoreVertical, Mail, MessageSquare } from 'lucide-react'
+import { Search, Plus, UserPlus, Phone, MapPin, MoreVertical, Mail, MessageSquare, FileText } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { db } from '@/lib/firebase'
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
-import AddCustomerModal from '@/components/AddCustomerModal'
 import Image from 'next/image'
+import AddCustomerModal from '@/components/AddCustomerModal'
+import Link from 'next/link'
 
 interface Customer {
   id: string
@@ -22,22 +21,30 @@ interface Customer {
   photo?: string | null
 }
 
+const initialCustomers: Customer[] = [
+  { id: 'CUS-001', name: 'Alice Johnson', phone: '01711223344', address: 'Dhanmondi, Dhaka', type: 'Regular', totalOrders: 5, totalDue: 1200, lastPurchase: '2024-03-20' },
+  { id: 'CUS-002', name: 'Bob Smith', phone: '01822334455', address: 'Gulshan, Dhaka', type: 'Premium', totalOrders: 12, totalDue: 0, lastPurchase: '2024-03-25' },
+  { id: 'CUS-003', name: 'Charlie Brown', phone: '01933445566', address: 'Uttara, Dhaka', type: 'Wholesale', totalOrders: 25, totalDue: 15000, lastPurchase: '2024-03-28' },
+]
+
 export default function CustomerPage() {
-  const [customersList, setCustomersList] = useState<Customer[]>([])
+  const [customersList, setCustomersList] = useState<Customer[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('customers_list')
+      return saved ? JSON.parse(saved) : initialCustomers
+    }
+    return initialCustomers
+  })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    const q = query(collection(db, 'customers'), orderBy('name', 'asc'))
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const docs = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Customer[]
-      setCustomersList(docs)
-    })
-    return () => unsubscribe()
-  }, [])
+    localStorage.setItem('customers_list', JSON.stringify(customersList))
+  }, [customersList])
+
+  const handleAddCustomer = (newCustomer: Customer) => {
+    setCustomersList(prev => [...prev, newCustomer])
+  }
 
   const filteredCustomers = customersList.filter(c => 
     c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -153,6 +160,13 @@ export default function CustomerPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <Link 
+                          href={`/customer-statement?id=${cus.id}`}
+                          className="p-2 hover:bg-amber-50 rounded-lg text-slate-400 hover:text-amber-600 transition-colors"
+                          title="View Statement"
+                        >
+                          <FileText size={18} />
+                        </Link>
                         <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 transition-colors"><MessageSquare size={18} /></button>
                         <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 transition-colors"><MoreVertical size={18} /></button>
                       </div>
@@ -175,6 +189,7 @@ export default function CustomerPage() {
       <AddCustomerModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
+        onAdd={handleAddCustomer}
       />
     </DashboardLayout>
   )

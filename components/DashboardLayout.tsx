@@ -40,29 +40,23 @@ const menuItems = [
   { name: 'Invoice Return', icon: Undo2, href: '/invoice-return' },
   { name: 'Customer', icon: Users, href: '/customer' },
   { name: 'Customer Statement', icon: UserCircle, href: '/customer-statement' },
+  { name: 'Bills', icon: Receipt, href: '/bills' },
   { 
-    name: 'Bills', 
-    icon: Receipt, 
-    href: '/bills',
+    name: 'Inventory', 
+    icon: Box, 
+    href: '/furniture-inventory',
     subItems: [
-      { name: 'Furniture Inventory', icon: ShoppingBag, href: '/furniture-inventory' },
-      { name: 'Wood Inventory', icon: Box, href: '/wood-inventory' },
+      { name: 'Furniture', icon: ShoppingBag, href: '/furniture-inventory' },
+      { name: 'Wood', icon: Box, href: '/wood-inventory' },
     ]
   },
   { 
-    name: 'Furniture Category', 
+    name: 'Category', 
     icon: Tags, 
     href: '/furniture-category',
     subItems: [
-      { name: 'Category', icon: Tags, href: '/furniture-category' },
-    ]
-  },
-  { 
-    name: 'Wood Category', 
-    icon: Trees, 
-    href: '/wood-category',
-    subItems: [
-      { name: 'Category', icon: Trees, href: '/wood-category' },
+      { name: 'Furniture', icon: Tags, href: '/furniture-category' },
+      { name: 'Wood', icon: Trees, href: '/wood-category' },
     ]
   },
   { name: 'Staff', icon: UserCog, href: '/staff' },

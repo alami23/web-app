@@ -1,9 +1,24 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
-import { Search, Printer, Download, User, Calendar, ArrowUpRight, ArrowDownLeft } from 'lucide-react'
+import { Search, Printer, Download, User, Calendar, ArrowUpRight, ArrowDownLeft, ChevronLeft } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+
+interface Customer {
+  id: string
+  name: string
+  phone: string
+  address: string
+  type: string
+  totalOrders: number
+  totalDue: number
+  lastPurchase: string
+  email?: string
+  photo?: string | null
+}
 
 const transactions = [
   { id: 'TXN-101', date: '2024-03-20', type: 'Invoice', ref: 'INV-2024-001', debit: 45000, credit: 0, balance: 45000 },
@@ -13,13 +28,57 @@ const transactions = [
 ]
 
 export default function CustomerStatementPage() {
+  const searchParams = useSearchParams()
+  const customerId = searchParams.get('id')
+  const [customer, setCustomer] = useState<Customer | null>(null)
+
+  useEffect(() => {
+    if (customerId) {
+      const saved = localStorage.getItem('customers_list')
+      if (saved) {
+        const list = JSON.parse(saved) as Customer[]
+        const found = list.find(c => c.id === customerId)
+        if (found) {
+          setCustomer(found)
+        }
+      }
+    }
+  }, [customerId])
+
+  if (!customer && customerId) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center h-[60vh] text-slate-500">
+          <User size={48} className="mb-4 opacity-20" />
+          <p className="text-lg font-medium">Customer not found</p>
+          <Link href="/customer" className="mt-4 text-amber-600 hover:underline flex items-center gap-1">
+            <ChevronLeft size={16} /> Back to Directory
+          </Link>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  // Fallback for demo if no ID provided
+  const displayCustomer = customer || {
+    id: 'CUS-001',
+    name: 'Alice Johnson',
+    type: 'Premium',
+    totalDue: 10000
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-display font-bold text-slate-900">Customer Statement</h1>
-            <p className="text-slate-500">Detailed financial history and ledger for individual customers.</p>
+          <div className="flex items-center gap-4">
+            <Link href="/customer" className="p-2 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all text-slate-400 hover:text-slate-600">
+              <ChevronLeft size={20} />
+            </Link>
+            <div>
+              <h1 className="text-2xl font-display font-bold text-slate-900">Customer Statement</h1>
+              <p className="text-slate-500">Detailed financial history and ledger for individual customers.</p>
+            </div>
           </div>
           <div className="flex gap-3">
             <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700">
@@ -34,11 +93,11 @@ export default function CustomerStatementPage() {
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-8 items-center">
           <div className="flex items-center gap-4 flex-1">
             <div className="w-16 h-16 rounded-2xl bg-amber-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-amber-600/20">
-              AJ
+              {displayCustomer.name.charAt(0)}
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">Alice Johnson</h2>
-              <p className="text-slate-500 text-sm">Customer ID: CUS-001 • Premium Member</p>
+              <h2 className="text-xl font-bold text-slate-900">{displayCustomer.name}</h2>
+              <p className="text-slate-500 text-sm">Customer ID: {displayCustomer.id} • {displayCustomer.type} Member</p>
               <div className="flex items-center gap-4 mt-2">
                 <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">ACTIVE</span>
                 <span className="text-xs text-slate-400">Member since Jan 2023</span>
@@ -48,7 +107,7 @@ export default function CustomerStatementPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full md:w-auto border-t md:border-t-0 md:border-l border-slate-100 pt-6 md:pt-0 md:pl-8">
             <div>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Billed</p>
-              <p className="text-lg font-bold text-slate-900">৳156,000</p>
+              <p className="text-lg font-bold text-slate-900">৳{(displayCustomer.totalDue + 146000).toLocaleString()}</p>
             </div>
             <div>
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Paid</p>
@@ -56,7 +115,7 @@ export default function CustomerStatementPage() {
             </div>
             <div className="col-span-2 md:col-span-1">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Current Due</p>
-              <p className="text-lg font-bold text-rose-500">৳10,000</p>
+              <p className="text-lg font-bold text-rose-500">৳{displayCustomer.totalDue.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -101,7 +160,7 @@ export default function CustomerStatementPage() {
               <tfoot className="bg-slate-50 font-bold text-slate-900">
                 <tr>
                   <td colSpan={5} className="px-6 py-4 text-right uppercase tracking-wider text-xs text-slate-500">Closing Balance</td>
-                  <td className="px-6 py-4 text-right text-lg">৳10,000</td>
+                  <td className="px-6 py-4 text-right text-lg">৳{displayCustomer.totalDue.toLocaleString()}</td>
                 </tr>
               </tfoot>
             </table>

@@ -1,13 +1,25 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import Image from 'next/image'
-import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Armchair, LayoutGrid, List } from 'lucide-react'
+import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Armchair, LayoutGrid, List, Check, UserPlus } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
+import AddCustomerModal from '@/components/AddCustomerModal'
 
-const furnitureProducts = [
+interface FurnitureProduct {
+  id: number
+  name: string
+  category: string
+  price: number
+  stock: number
+  image: string
+  description?: string
+  sku?: string
+}
+
+const initialFurnitureProducts: FurnitureProduct[] = [
   { id: 1, name: 'Royal King Size Bed', category: 'Bed', price: 45000, stock: 5, image: 'https://picsum.photos/seed/bed1/400/400' },
   { id: 2, name: 'Modern Velvet Sofa', category: 'Sofa', price: 32000, stock: 8, image: 'https://picsum.photos/seed/sofa1/400/400' },
   { id: 3, name: 'Classic Dining Table', category: 'Dining', price: 28000, stock: 4, image: 'https://picsum.photos/seed/dining1/400/400' },
@@ -21,13 +33,61 @@ const furnitureProducts = [
 const categories = ['All', 'Bed', 'Sofa', 'Dining', 'Chair', 'Wardrobe', 'Office']
 
 export default function POSFurniture() {
+  const [products, setProducts] = useState<FurnitureProduct[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('furniture_inventory');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse furniture inventory', e);
+        }
+      }
+    }
+    return initialFurnitureProducts;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('furniture_inventory', JSON.stringify(products));
+  }, [products]);
+
   const [cart, setCart] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [isCheckoutSuccess, setIsCheckoutSuccess] = useState(false)
+  const [customers, setCustomers] = useState<any[]>([])
+  const [selectedCustomer, setSelectedCustomer] = useState('Walk-in Customer')
+  const [isAddingCustomer, setIsAddingCustomer] = useState(false)
 
-  const addToCart = (product: any) => {
+  useEffect(() => {
+    const loadCustomers = () => {
+      const saved = localStorage.getItem('customers_list')
+      if (saved) {
+        setCustomers(JSON.parse(saved))
+      }
+    }
+    loadCustomers()
+    window.addEventListener('storage', loadCustomers)
+    return () => window.removeEventListener('storage', loadCustomers)
+  }, [])
+
+  const handleAddCustomer = (customer: any) => {
+    const updated = [...customers, customer]
+    setCustomers(updated)
+    localStorage.setItem('customers_list', JSON.stringify(updated))
+    setSelectedCustomer(customer.name)
+  }
+
+  const addToCart = (product: FurnitureProduct) => {
     const existing = cart.find(item => item.id === product.id)
+    const currentQty = existing ? existing.quantity : 0
+    
+    if (currentQty >= product.stock) {
+      alert(`Only ${product.stock} units available in stock.`)
+      return
+    }
+
     if (existing) {
       setCart(cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item))
     } else {
@@ -36,13 +96,37 @@ export default function POSFurniture() {
   }
 
   const updateQuantity = (id: number, delta: number) => {
+    const product = products.find(p => p.id === id)
+    if (!product) return
+
     setCart(cart.map(item => {
       if (item.id === id) {
-        const newQty = Math.max(1, item.quantity + delta)
-        return { ...item, quantity: newQty }
+        const newQty = item.quantity + delta
+        if (newQty > product.stock) {
+          alert(`Only ${product.stock} units available in stock.`)
+          return item
+        }
+        return { ...item, quantity: Math.max(1, newQty) }
       }
       return item
     }))
+  }
+
+  const handleCheckout = () => {
+    if (cart.length === 0) return
+
+    // Update stock in products
+    const updatedProducts = products.map(product => {
+      const cartItem = cart.find(item => item.id === product.id)
+      if (cartItem) {
+        return { ...product, stock: product.stock - cartItem.quantity }
+      }
+      return product
+    })
+
+    setProducts(updatedProducts)
+    setCart([])
+    setIsCheckoutSuccess(true)
   }
 
   const removeFromCart = (id: number) => {
@@ -53,7 +137,7 @@ export default function POSFurniture() {
   const deliveryCharge = cart.length > 0 ? 500 : 0
   const total = subtotal + deliveryCharge
 
-  const filteredProducts = furnitureProducts.filter(p => 
+  const filteredProducts = products.filter(p => 
     (activeCategory === 'All' || p.category === activeCategory) &&
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -182,29 +266,40 @@ export default function POSFurniture() {
 
         {/* Right: Cart/Checkout */}
         <div className="w-full lg:w-[400px] bg-white rounded-3xl border border-slate-200 shadow-xl flex flex-col overflow-hidden">
-          <div className="p-6 bg-slate-900 text-white">
-            <div className="flex items-center justify-between mb-4">
+          <div className="p-6 bg-slate-900 text-white space-y-4">
+            <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <ShoppingCart size={20} /> Order Summary
               </h2>
               <button 
-                onClick={() => setCart([])}
+                onClick={() => {
+                  setCart([])
+                  setSelectedCustomer('Walk-in Customer')
+                }}
                 className="text-slate-400 hover:text-white text-sm font-semibold"
               >
                 Reset
               </button>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 bg-white/10 p-2 rounded-xl border border-white/10">
-                <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white">
-                  <Plus size={16} />
-                </div>
-                <input 
-                  type="text" 
-                  placeholder="Select Customer..." 
-                  className="bg-transparent border-none outline-none text-sm text-white placeholder:text-slate-400 w-full"
-                />
-              </div>
+            
+            <div className="flex items-center gap-2">
+              <select 
+                className="flex-1 p-2.5 bg-white/10 border border-white/10 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors text-white"
+                value={selectedCustomer}
+                onChange={(e) => setSelectedCustomer(e.target.value)}
+              >
+                <option value="Walk-in Customer" className="text-slate-900">Walk-in Customer</option>
+                {customers.map(c => (
+                  <option key={c.id} value={c.name} className="text-slate-900">{c.name} ({c.phone})</option>
+                ))}
+              </select>
+              <button 
+                onClick={() => setIsAddingCustomer(true)}
+                className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
+                title="Add New Customer"
+              >
+                <UserPlus size={18} />
+              </button>
             </div>
           </div>
 
@@ -268,13 +363,55 @@ export default function POSFurniture() {
               <button className="py-4 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
                 <Printer size={18} /> A4 Print
               </button>
-              <button className="py-4 px-4 bg-amber-600 text-white rounded-2xl font-bold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20">
+              <button 
+                onClick={handleCheckout}
+                className="py-4 px-4 bg-amber-600 text-white rounded-2xl font-bold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20"
+              >
                 Place Order
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {isCheckoutSuccess && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsCheckoutSuccess(false)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white rounded-3xl p-8 shadow-2xl max-w-sm w-full text-center"
+            >
+              <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Check size={40} strokeWidth={3} />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Order Successful!</h2>
+              <p className="text-slate-500 mb-8">The furniture stock has been updated and the invoice is ready.</p>
+              <button 
+                onClick={() => setIsCheckoutSuccess(false)}
+                className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all"
+              >
+                Continue Shopping
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      {/* Add Customer Modal */}
+      <AddCustomerModal 
+        isOpen={isAddingCustomer}
+        onClose={() => setIsAddingCustomer(false)}
+        onAdd={handleAddCustomer}
+      />
     </DashboardLayout>
   )
 }

@@ -1,21 +1,22 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import Image from 'next/image'
-import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Filter, Pencil, Check, X, Camera, Upload } from 'lucide-react'
+import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Filter, Pencil, Check, X, Camera, Upload, UserPlus } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
+import AddCustomerModal from '@/components/AddCustomerModal'
 
 const initialWoodProducts = [
-  { id: 1, name: 'Segun Wood Log', category: 'Hardwood', subCategory: 'Segun', carNo: '1', width: 24, length: 12, cft: 3.000000, description: 'Premium grade Segun wood log for furniture', price: 1200, stock: 150, unit: 'cu ft', image: 'https://picsum.photos/seed/segun/200/200' },
-  { id: 2, name: 'Mahogany Plank', category: 'Hardwood', subCategory: 'Mahogany', carNo: '1', width: 12, length: 8, cft: 0.500000, description: 'Standard mahogany plank, seasoned', price: 950, stock: 80, unit: 'cu ft', image: 'https://picsum.photos/seed/mahogany/200/200' },
-  { id: 3, name: 'Gamari Beam', category: 'Softwood', subCategory: 'Gamari', carNo: '2', width: 18, length: 10, cft: 1.406250, description: 'Local gamari wood beam for construction', price: 650, stock: 200, unit: 'cu ft', image: 'https://picsum.photos/seed/gamari/200/200' },
-  { id: 4, name: 'Teak Square', category: 'Hardwood', subCategory: 'Teak', carNo: '2', width: 20, length: 6, cft: 1.041667, description: 'Imported teak wood square block', price: 1500, stock: 45, unit: 'cu ft', image: 'https://picsum.photos/seed/teak/200/200' },
-  { id: 5, name: 'Plywood Sheet', category: 'Board', subCategory: 'Plywood', carNo: '3', width: 48, length: 8, cft: 8.000000, description: 'Waterproof 12mm plywood sheet', price: 45, stock: 500, unit: 'sq ft', image: 'https://picsum.photos/seed/plywood/200/200' },
-  { id: 6, name: 'MDF Board', category: 'Board', subCategory: 'MDF', carNo: '4', width: 48, length: 8, cft: 8.000000, description: 'Standard MDF board for interior', price: 35, stock: 320, unit: 'sq ft', image: 'https://picsum.photos/seed/mdf/200/200' },
-  { id: 7, name: 'Pine Plank', category: 'Softwood', subCategory: 'Pine', carNo: '5', width: 10, length: 12, cft: 0.520833, description: 'Seasoned pine plank for framing', price: 450, stock: 120, unit: 'cu ft', image: 'https://picsum.photos/seed/pine/200/200' },
-  { id: 8, name: 'Cedar Beam', category: 'Softwood', subCategory: 'Cedar', carNo: '5', width: 14, length: 14, cft: 1.190972, description: 'Aromatic cedar beam for closets', price: 850, stock: 60, unit: 'cu ft', image: 'https://picsum.photos/seed/cedar/200/200' },
+  { id: 1, name: 'Segun Wood Log', category: 'Hardwood', subCategory: '101', carNo: '1', width: 24, length: 12, cft: 3.000000, description: 'Premium grade Segun wood log for furniture', price: 1200, stock: 150, unit: 'cu ft', image: 'https://picsum.photos/seed/segun/200/200' },
+  { id: 2, name: 'Mahogany Plank', category: 'Hardwood', subCategory: '102', carNo: '1', width: 12, length: 8, cft: 0.500000, description: 'Standard mahogany plank, seasoned', price: 950, stock: 80, unit: 'cu ft', image: 'https://picsum.photos/seed/mahogany/200/200' },
+  { id: 3, name: 'Gamari Beam', category: 'Softwood', subCategory: '201', carNo: '2', width: 18, length: 10, cft: 1.406250, description: 'Local gamari wood beam for construction', price: 650, stock: 200, unit: 'cu ft', image: 'https://picsum.photos/seed/gamari/200/200' },
+  { id: 4, name: 'Teak Square', category: 'Hardwood', subCategory: '103', carNo: '2', width: 20, length: 6, cft: 1.041667, description: 'Imported teak wood square block', price: 1500, stock: 45, unit: 'cu ft', image: 'https://picsum.photos/seed/teak/200/200' },
+  { id: 5, name: 'Plywood Sheet', category: 'Board', subCategory: '301', carNo: '3', width: 48, length: 8, cft: 8.000000, description: 'Waterproof 12mm plywood sheet', price: 45, stock: 500, unit: 'sq ft', image: 'https://picsum.photos/seed/plywood/200/200' },
+  { id: 6, name: 'MDF Board', category: 'Board', subCategory: '401', carNo: '4', width: 48, length: 8, cft: 8.000000, description: 'Standard MDF board for interior', price: 35, stock: 320, unit: 'sq ft', image: 'https://picsum.photos/seed/mdf/200/200' },
+  { id: 7, name: 'Pine Plank', category: 'Softwood', subCategory: '202', carNo: '5', width: 10, length: 12, cft: 0.520833, description: 'Seasoned pine plank for framing', price: 450, stock: 120, unit: 'cu ft', image: 'https://picsum.photos/seed/pine/200/200' },
+  { id: 8, name: 'Cedar Beam', category: 'Softwood', subCategory: '203', carNo: '5', width: 14, length: 14, cft: 1.190972, description: 'Aromatic cedar beam for closets', price: 850, stock: 60, unit: 'cu ft', image: 'https://picsum.photos/seed/cedar/200/200' },
 ]
 
 const categoryData: { [key: string]: string[] } = {
@@ -26,48 +27,80 @@ const categoryData: { [key: string]: string[] } = {
   'Accessories': []
 }
 
+interface WoodProduct {
+  id: number
+  name: string
+  category: string
+  subCategory: string
+  carNo: string
+  width: number
+  length: number
+  cft: number
+  description: string
+  price: number
+  stock: number
+  unit: string
+  image: string
+}
+
 export default function POSWood() {
-  const [products, setProducts] = useState(initialWoodProducts)
+  const [products, setProducts] = useState<WoodProduct[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('wood_inventory');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse wood inventory', e);
+        }
+      }
+    }
+    return initialWoodProducts;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('wood_inventory', JSON.stringify(products));
+  }, [products]);
+
   const [cart, setCart] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [selectedSubCategory, setSelectedSubCategory] = useState('All')
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editData, setEditData] = useState<any>(null)
-  const [customers, setCustomers] = useState(['Walk-in Customer', 'Regular Client: Alice Johnson', 'Wholesale: Furniture Hub'])
+
+  const [customers, setCustomers] = useState<any[]>([])
   const [isAddingCustomer, setIsAddingCustomer] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState('Walk-in Customer')
-  const [newCustomer, setNewCustomer] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    photo: null as string | null
-  })
+  const [isCheckoutSuccess, setIsCheckoutSuccess] = useState(false)
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setNewCustomer({ ...newCustomer, photo: reader.result as string })
+  useEffect(() => {
+    const loadCustomers = () => {
+      const saved = localStorage.getItem('customers_list')
+      if (saved) {
+        setCustomers(JSON.parse(saved))
       }
-      reader.readAsDataURL(file)
     }
-  }
+    loadCustomers()
+    window.addEventListener('storage', loadCustomers)
+    return () => window.removeEventListener('storage', loadCustomers)
+  }, [])
 
-  const resetNewCustomer = () => {
-    setNewCustomer({
-      name: '',
-      email: '',
-      phone: '',
-      address: '',
-      photo: null
-    })
+  const handleAddCustomer = (customer: any) => {
+    const updated = [...customers, customer]
+    setCustomers(updated)
+    localStorage.setItem('customers_list', JSON.stringify(updated))
+    setSelectedCustomer(customer.name)
   }
 
   const addToCart = (product: any) => {
     const existing = cart.find(item => item.id === product.id)
+    const currentQty = existing ? existing.quantity : 0
+    
+    if (currentQty + 1 > product.stock) {
+      return
+    }
+
     if (existing) {
       setCart(cart.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item))
     } else {
@@ -78,11 +111,37 @@ export default function POSWood() {
   const updateQuantity = (id: number, delta: number) => {
     setCart(cart.map(item => {
       if (item.id === id) {
+        const product = products.find(p => p.id === id)
         const newQty = Math.max(1, item.quantity + delta)
+        
+        if (product && newQty > product.stock) {
+          return item
+        }
+        
         return { ...item, quantity: newQty }
       }
       return item
     }))
+  }
+
+  const handleCheckout = () => {
+    if (cart.length === 0) return
+
+    // Update products stock
+    const updatedProducts = products.map(product => {
+      const cartItem = cart.find(item => item.id === product.id)
+      if (cartItem) {
+        return {
+          ...product,
+          stock: Math.max(0, product.stock - cartItem.quantity)
+        }
+      }
+      return product
+    })
+
+    setProducts(updatedProducts)
+    setCart([])
+    setIsCheckoutSuccess(true)
   }
 
   const removeFromCart = (id: number) => {
@@ -193,11 +252,12 @@ export default function POSWood() {
               <thead className="sticky top-0 bg-slate-50 text-slate-500 text-xs uppercase tracking-wider z-10">
                 <tr>
                   <th className="px-3 py-2 font-semibold w-12 text-center">No</th>
+                  <th className="px-1 py-2 font-semibold w-14">Car</th>
+                  <th className="px-2 py-2 font-semibold w-24">Tree No</th>
                   <th className="px-3 py-2 font-semibold w-20">Width</th>
                   <th className="px-3 py-2 font-semibold w-20">Length</th>
                   <th className="px-3 py-2 font-semibold w-28">CFT</th>
                   <th className="px-2 py-2 font-semibold">Description</th>
-                  <th className="px-1 py-2 font-semibold w-14">Car</th>
                   <th className="px-1 py-2 font-semibold w-14">Qty</th>
                   <th className="px-1 py-2 font-semibold w-16 text-center">Rate</th>
                   <th className="px-1 py-2 font-semibold text-center w-28">Action</th>
@@ -213,6 +273,26 @@ export default function POSWood() {
                     )}
                   >
                     <td className="px-3 py-2 text-[10px] font-medium text-slate-400 text-center">{index + 1}</td>
+                    <td className="px-1 py-2 text-xs text-slate-600 font-medium">
+                      {editingId === product.id ? (
+                        <input 
+                          type="text" 
+                          className="w-10 p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px]" 
+                          value={editData.carNo}
+                          onChange={(e) => handleEditChange('carNo', e.target.value)}
+                        />
+                      ) : product.carNo}
+                    </td>
+                    <td className="px-2 py-2 text-xs font-bold text-emerald-600">
+                      {editingId === product.id ? (
+                        <input 
+                          type="text" 
+                          className="w-full p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px]" 
+                          value={editData.subCategory}
+                          onChange={(e) => handleEditChange('subCategory', e.target.value)}
+                        />
+                      ) : product.subCategory}
+                    </td>
                     <td className="px-3 py-2 text-xs text-slate-600 font-medium">
                       {editingId === product.id ? (
                         <input 
@@ -257,16 +337,6 @@ export default function POSWood() {
                         <span className="text-[10px] text-slate-600 line-clamp-1">{product.description}</span>
                       )}
                     </td>
-                    <td className="px-1 py-2 text-xs text-slate-600 font-medium">
-                      {editingId === product.id ? (
-                        <input 
-                          type="text" 
-                          className="w-10 p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px]" 
-                          value={editData.carNo}
-                          onChange={(e) => handleEditChange('carNo', e.target.value)}
-                        />
-                      ) : product.carNo}
-                    </td>
                     <td className="px-1 py-2">
                       {editingId === product.id ? (
                         <input 
@@ -292,7 +362,7 @@ export default function POSWood() {
                           value={editData.price}
                           onChange={(e) => handleEditChange('price', parseInt(e.target.value))}
                         />
-                      ) : `$${product.price}`}
+                      ) : `৳${product.price}`}
                     </td>
                     <td className="px-1 py-2 text-center">
                       <div className="flex items-center justify-center gap-2">
@@ -369,8 +439,9 @@ export default function POSWood() {
                 value={selectedCustomer}
                 onChange={(e) => setSelectedCustomer(e.target.value)}
               >
+                <option value="Walk-in Customer">Walk-in Customer</option>
                 {customers.map(c => (
-                  <option key={c} value={c}>{c}</option>
+                  <option key={c.id} value={c.name}>{c.name} ({c.phone})</option>
                 ))}
               </select>
               <button 
@@ -378,123 +449,18 @@ export default function POSWood() {
                 className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
                 title="Add New Customer"
               >
-                <Plus size={18} />
+                <UserPlus size={18} />
               </button>
             </div>
           </div>
 
           {/* Add Customer Modal */}
-          <AnimatePresence>
-            {isAddingCustomer && (
-              <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
-                >
-                  <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-slate-800">Add New Customer</h3>
-                    <button onClick={() => { setIsAddingCustomer(false); resetNewCustomer(); }} className="text-slate-400 hover:text-slate-600">
-                      <X size={20} />
-                    </button>
-                  </div>
-                  <div className="p-6 space-y-4 max-h-[80vh] overflow-y-auto custom-scrollbar">
-                    {/* Photo Upload */}
-                    <div className="flex flex-col items-center justify-center gap-3 mb-2">
-                      <div className="relative w-24 h-24 rounded-full bg-slate-100 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden group">
-                        {newCustomer.photo ? (
-                          <Image 
-                            src={newCustomer.photo} 
-                            alt="Preview" 
-                            fill 
-                            className="object-cover" 
-                          />
-                        ) : (
-                          <Camera size={32} className="text-slate-300" />
-                        )}
-                        <label className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
-                          <Upload size={20} className="text-white" />
-                          <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
-                        </label>
-                      </div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Upload Profile Photo</span>
-                    </div>
+          <AddCustomerModal 
+            isOpen={isAddingCustomer}
+            onClose={() => setIsAddingCustomer(false)}
+            onAdd={handleAddCustomer}
+          />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Full Name *</label>
-                        <input 
-                          type="text" 
-                          autoFocus
-                          className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-amber-500 transition-colors text-sm"
-                          placeholder="John Doe"
-                          value={newCustomer.name}
-                          onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Phone Number *</label>
-                        <input 
-                          type="tel" 
-                          className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-amber-500 transition-colors text-sm"
-                          placeholder="+880 1XXX XXXXXX"
-                          value={newCustomer.phone}
-                          onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Email Address (Optional)</label>
-                      <input 
-                        type="email" 
-                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-amber-500 transition-colors text-sm"
-                        placeholder="john@example.com"
-                        value={newCustomer.email}
-                        onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Address</label>
-                      <textarea 
-                        rows={2}
-                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-amber-500 transition-colors text-sm resize-none"
-                        placeholder="Enter street address, city..."
-                        value={newCustomer.address}
-                        onChange={(e) => setNewCustomer({ ...newCustomer, address: e.target.value })}
-                      />
-                    </div>
-
-                    <div className="flex gap-3 pt-2">
-                      <button 
-                        onClick={() => { setIsAddingCustomer(false); resetNewCustomer(); }}
-                        className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button 
-                        disabled={!newCustomer.name.trim() || !newCustomer.phone.trim()}
-                        onClick={() => {
-                          if (newCustomer.name.trim() && newCustomer.phone.trim()) {
-                            const displayName = newCustomer.name.trim()
-                            setCustomers([...customers, displayName])
-                            setSelectedCustomer(displayName)
-                            resetNewCustomer()
-                            setIsAddingCustomer(false)
-                          }
-                        }}
-                        className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold rounded-xl transition-colors shadow-lg shadow-amber-500/20"
-                      >
-                        Save Customer
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
 
           <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
             <AnimatePresence mode="popLayout">
@@ -524,8 +490,8 @@ export default function POSWood() {
                     <div className="flex-1">
                       <h4 className="text-sm font-bold text-slate-800">{item.name}</h4>
                       <div className="flex flex-col">
-                        <p className="text-[10px] text-slate-500">${item.price} × {item.cft.toFixed(5)} {item.unit}</p>
-                        <p className="text-xs font-bold text-amber-600">${(item.price * item.cft * item.quantity).toFixed(2)}</p>
+                        <p className="text-[10px] text-slate-500">৳{item.price} × {item.cft.toFixed(5)} {item.unit}</p>
+                        <p className="text-xs font-bold text-amber-600">৳{(item.price * item.cft * item.quantity).toFixed(2)}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
@@ -544,27 +510,56 @@ export default function POSWood() {
             <div className="space-y-2">
               <div className="flex justify-between text-slate-600">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>৳{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Tax (5%)</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>৳{tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-xl font-bold text-slate-900 pt-2 border-t border-slate-200">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>৳{total.toFixed(2)}</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <button className="py-3 px-4 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
                 <Printer size={18} /> Bill
               </button>
-              <button className="py-3 px-4 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20">
+              <button 
+                onClick={handleCheckout}
+                className="py-3 px-4 bg-amber-600 text-white rounded-xl font-bold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20"
+              >
                 Checkout
               </button>
             </div>
           </div>
         </div>
+
+        {/* Checkout Success Modal */}
+        <AnimatePresence>
+          {isCheckoutSuccess && (
+            <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden p-8 text-center"
+              >
+                <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Check size={40} />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">Sale Complete!</h3>
+                <p className="text-slate-500 mb-8">The wood inventory has been automatically updated and the invoice is ready.</p>
+                <button 
+                  onClick={() => setIsCheckoutSuccess(false)}
+                  className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
+                >
+                  Continue
+                </button>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </DashboardLayout>
   )

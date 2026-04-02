@@ -26,10 +26,10 @@ import {
 import { cn } from '@/lib/utils'
 
 const stats = [
-  { label: 'Total Sales', value: '$124,500', change: '+12.5%', trend: 'up', icon: DollarSign, color: 'bg-emerald-500' },
-  { label: 'Total Purchases', value: '$45,200', change: '-2.4%', trend: 'down', icon: ShoppingBag, color: 'bg-blue-500' },
+  { label: 'Total Sales', value: '৳124,500', change: '+12.5%', trend: 'up', icon: DollarSign, color: 'bg-emerald-500' },
+  { label: 'Total Purchases', value: '৳45,200', change: '-2.4%', trend: 'down', icon: ShoppingBag, color: 'bg-blue-500' },
   { label: 'Total Customers', value: '1,240', change: '+18.2%', trend: 'up', icon: Users, color: 'bg-amber-500' },
-  { label: 'Due Collection', value: '$12,800', change: '+4.1%', trend: 'up', icon: AlertCircle, color: 'bg-rose-500' },
+  { label: 'Due Collection', value: '৳12,800', change: '+4.1%', trend: 'up', icon: AlertCircle, color: 'bg-rose-500' },
 ]
 
 const revenueData = [
@@ -49,10 +49,10 @@ const categoryData = [
 ]
 
 const recentInvoices = [
-  { id: 'INV-001', customer: 'Alice Johnson', date: '2024-03-20', amount: '$1,200', status: 'Paid' },
-  { id: 'INV-002', customer: 'Bob Smith', date: '2024-03-19', amount: '$850', status: 'Pending' },
-  { id: 'INV-003', customer: 'Charlie Brown', date: '2024-03-18', amount: '$2,400', status: 'Due' },
-  { id: 'INV-004', customer: 'Diana Prince', date: '2024-03-17', amount: '$1,100', status: 'Paid' },
+  { id: 'INV-001', customer: 'Alice Johnson', date: '2024-03-20', amount: '৳1,200', status: 'Paid' },
+  { id: 'INV-002', customer: 'Bob Smith', date: '2024-03-19', amount: '৳850', status: 'Pending' },
+  { id: 'INV-003', customer: 'Charlie Brown', date: '2024-03-18', amount: '৳2,400', status: 'Due' },
+  { id: 'INV-004', customer: 'Diana Prince', date: '2024-03-17', amount: '৳1,100', status: 'Paid' },
 ]
 
 export default function Dashboard() {
