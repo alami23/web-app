@@ -49,8 +49,22 @@ const menuItems = [
       { name: 'Wood Inventory', icon: Box, href: '/wood-inventory' },
     ]
   },
-  { name: 'Furniture Category', icon: Tags, href: '/furniture-category' },
-  { name: 'Wood Category', icon: Trees, href: '/wood-category' },
+  { 
+    name: 'Furniture Category', 
+    icon: Tags, 
+    href: '/furniture-category',
+    subItems: [
+      { name: 'Category', icon: Tags, href: '/furniture-category' },
+    ]
+  },
+  { 
+    name: 'Wood Category', 
+    icon: Trees, 
+    href: '/wood-category',
+    subItems: [
+      { name: 'Category', icon: Trees, href: '/wood-category' },
+    ]
+  },
   { name: 'Staff', icon: UserCog, href: '/staff' },
   { name: 'Staff Statement', icon: History, href: '/staff-statement' },
   { name: 'Transactions', icon: ArrowLeftRight, href: '/transactions' },
