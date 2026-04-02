@@ -25,7 +25,9 @@ import {
   ChevronRight,
   Search,
   Bell,
-  User
+  User,
+  Box,
+  ShoppingBag
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -38,7 +40,15 @@ const menuItems = [
   { name: 'Invoice Return', icon: Undo2, href: '/invoice-return' },
   { name: 'Customer', icon: Users, href: '/customer' },
   { name: 'Customer Statement', icon: UserCircle, href: '/customer-statement' },
-  { name: 'Bills', icon: Receipt, href: '/bills' },
+  { 
+    name: 'Bills', 
+    icon: Receipt, 
+    href: '/bills',
+    subItems: [
+      { name: 'Furniture Inventory', icon: ShoppingBag, href: '/furniture-inventory' },
+      { name: 'Wood Inventory', icon: Box, href: '/wood-inventory' },
+    ]
+  },
   { name: 'Furniture Category', icon: Tags, href: '/furniture-category' },
   { name: 'Wood Category', icon: Trees, href: '/wood-category' },
   { name: 'Staff', icon: UserCog, href: '/staff' },
@@ -102,30 +112,64 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <nav className="flex-1 overflow-y-auto p-4 space-y-1 custom-scrollbar">
           {menuItems.map((item) => {
-            const isActive = pathname === item.href
+            const isActive = pathname === item.href || item.subItems?.some(sub => pathname === sub.href)
+            const isExpanded = item.subItems?.some(sub => pathname === sub.href) || pathname.startsWith(item.href)
+
             return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
-                  isActive 
-                    ? "bg-amber-50 text-amber-700 font-medium" 
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              <div key={item.name} className="space-y-1">
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
+                    isActive 
+                      ? "bg-amber-50 text-amber-700 font-medium" 
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                  )}
+                >
+                  <item.icon size={20} className={cn(
+                    "transition-colors",
+                    isActive ? "text-amber-600" : "text-slate-400 group-hover:text-slate-600"
+                  )} />
+                  <span className="whitespace-nowrap flex-1">{item.name}</span>
+                  {item.subItems && (
+                    <ChevronRight size={14} className={cn(
+                      "transition-transform duration-200",
+                      isExpanded && "rotate-90"
+                    )} />
+                  )}
+                  {isActive && !item.subItems && (
+                    <motion.div 
+                      layoutId="active-pill"
+                      className="absolute left-0 w-1 h-6 bg-amber-600 rounded-r-full"
+                    />
+                  )}
+                </Link>
+
+                {item.subItems && isExpanded && (
+                  <div className="ml-4 pl-4 border-l border-slate-100 space-y-1">
+                    {item.subItems.map((sub) => {
+                      const isSubActive = pathname === sub.href
+                      return (
+                        <Link
+                          key={sub.name}
+                          href={sub.href}
+                          className={cn(
+                            "flex items-center gap-3 px-4 py-2 rounded-lg text-sm transition-all duration-200",
+                            isSubActive 
+                              ? "text-amber-700 font-medium bg-amber-50/50" 
+                              : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                          )}
+                        >
+                          <sub.icon size={16} className={cn(
+                            isSubActive ? "text-amber-600" : "text-slate-400"
+                          )} />
+                          <span>{sub.name}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
                 )}
-              >
-                <item.icon size={20} className={cn(
-                  "transition-colors",
-                  isActive ? "text-amber-600" : "text-slate-400 group-hover:text-slate-600"
-                )} />
-                <span className="whitespace-nowrap">{item.name}</span>
-                {isActive && (
-                  <motion.div 
-                    layoutId="active-pill"
-                    className="absolute left-0 w-1 h-6 bg-amber-600 rounded-r-full"
-                  />
-                )}
-              </Link>
+              </div>
             )
           })}
         </nav>
