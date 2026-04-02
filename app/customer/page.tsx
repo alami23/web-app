@@ -1,18 +1,57 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Search, Plus, UserPlus, Phone, MapPin, MoreVertical, Mail, MessageSquare } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { db } from '@/lib/firebase'
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
+import AddCustomerModal from '@/components/AddCustomerModal'
+import Image from 'next/image'
 
-const customers = [
-  { id: 'CUS-001', name: 'Alice Johnson', phone: '+880 1712-345678', address: 'Banani, Dhaka', type: 'Premium', totalOrders: 12, totalDue: 0, lastPurchase: '2024-03-20' },
-  { id: 'CUS-002', name: 'Bob Smith', phone: '+880 1812-987654', address: 'Uttara, Dhaka', type: 'Regular', totalOrders: 5, totalDue: 7500, lastPurchase: '2024-03-19' },
-  { id: 'CUS-003', name: 'Charlie Brown', phone: '+880 1912-112233', address: 'Dhanmondi, Dhaka', type: 'Wholesale', totalOrders: 28, totalDue: 32000, lastPurchase: '2024-03-18' },
-  { id: 'CUS-004', name: 'Diana Prince', phone: '+880 1612-445566', address: 'Gulshan, Dhaka', type: 'Premium', totalOrders: 8, totalDue: 0, lastPurchase: '2024-03-17' },
-]
+interface Customer {
+  id: string
+  name: string
+  phone: string
+  address: string
+  type: string
+  totalOrders: number
+  totalDue: number
+  lastPurchase: string
+  email?: string
+  photo?: string | null
+}
 
 export default function CustomerPage() {
+  const [customersList, setCustomersList] = useState<Customer[]>([])
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  useEffect(() => {
+    const q = query(collection(db, 'customers'), orderBy('name', 'asc'))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const docs = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Customer[]
+      setCustomersList(docs)
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const filteredCustomers = customersList.filter(c => 
+    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    c.phone.includes(searchQuery) ||
+    c.id.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const stats = [
+    { label: 'Total Customers', value: customersList.length.toLocaleString(), color: 'bg-blue-500' },
+    { label: 'Active This Month', value: customersList.filter(c => c.totalOrders > 0).length.toString(), color: 'bg-emerald-500' },
+    { label: 'New Customers', value: customersList.length > 0 ? 'Recently Added' : '0', color: 'bg-purple-500' },
+    { label: 'Total Due', value: `৳${customersList.reduce((acc, c) => acc + (c.totalDue || 0), 0).toLocaleString()}`, color: 'bg-rose-500' },
+  ]
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -21,18 +60,16 @@ export default function CustomerPage() {
             <h1 className="text-2xl font-display font-bold text-slate-900">Customer Directory</h1>
             <p className="text-slate-500">Manage your customer relationships and order history.</p>
           </div>
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20"
+          >
             <UserPlus size={18} /> Add New Customer
           </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { label: 'Total Customers', value: '1,240', color: 'bg-blue-500' },
-            { label: 'Active This Month', value: '156', color: 'bg-emerald-500' },
-            { label: 'New Customers', value: '24', color: 'bg-purple-500' },
-            { label: 'Total Due', value: '৳1.2M', color: 'bg-rose-500' },
-          ].map((stat) => (
+          {stats.map((stat) => (
             <div key={stat.label} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{stat.label}</p>
               <h3 className="text-xl font-bold text-slate-900">{stat.value}</h3>
@@ -48,6 +85,8 @@ export default function CustomerPage() {
                 type="text" 
                 placeholder="Search by name, phone or ID..." 
                 className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-xl outline-none text-sm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <div className="flex gap-2">
@@ -68,23 +107,29 @@ export default function CustomerPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {customers.map((cus) => (
+                {filteredCustomers.map((cus) => (
                   <tr key={cus.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold">
-                          {cus.name.charAt(0)}
-                        </div>
+                        {cus.photo ? (
+                          <div className="w-10 h-10 rounded-full overflow-hidden relative">
+                            <Image src={cus.photo} alt={cus.name} fill className="object-cover" />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold">
+                            {cus.name.charAt(0)}
+                          </div>
+                        )}
                         <div className="flex flex-col">
                           <span className="text-sm font-bold text-slate-900">{cus.name}</span>
-                          <span className="text-xs text-slate-400">{cus.id}</span>
+                          <span className="text-[10px] text-slate-400 font-mono">{cus.id.slice(-6).toUpperCase()}</span>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
                         <span className="text-xs text-slate-600 flex items-center gap-1"><Phone size={12} /> {cus.phone}</span>
-                        <span className="text-xs text-slate-400 flex items-center gap-1"><MapPin size={12} /> {cus.address}</span>
+                        <span className="text-xs text-slate-400 flex items-center gap-1 line-clamp-1"><MapPin size={12} /> {cus.address}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -94,16 +139,16 @@ export default function CustomerPage() {
                         cus.type === 'Wholesale' ? "bg-blue-100 text-blue-700" :
                         "bg-slate-100 text-slate-600"
                       )}>
-                        {cus.type}
+                        {cus.type || 'Regular'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 font-medium">{cus.totalOrders} Orders</td>
+                    <td className="px-6 py-4 text-sm text-slate-600 font-medium">{cus.totalOrders || 0} Orders</td>
                     <td className="px-6 py-4">
                       <span className={cn(
                         "text-sm font-bold",
-                        cus.totalDue > 0 ? "text-rose-500" : "text-emerald-600"
+                        (cus.totalDue || 0) > 0 ? "text-rose-500" : "text-emerald-600"
                       )}>
-                        {cus.totalDue > 0 ? `৳${cus.totalDue.toLocaleString()}` : 'No Due'}
+                        {(cus.totalDue || 0) > 0 ? `৳${cus.totalDue.toLocaleString()}` : 'No Due'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -114,11 +159,23 @@ export default function CustomerPage() {
                     </td>
                   </tr>
                 ))}
+                {filteredCustomers.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                      No customers found matching your search.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+
+      <AddCustomerModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </DashboardLayout>
   )
 }

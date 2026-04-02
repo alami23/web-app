@@ -13,7 +13,9 @@ import {
   Users, 
   AlertTriangle,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Send,
+  CheckCircle2
 } from 'lucide-react'
 import { 
   BarChart, 
@@ -86,6 +88,16 @@ export default function ReportPage() {
     }
   }
 
+  const handleSendReminder = (customerName: string) => {
+    // Mock sending a reminder
+    console.log(`Sending reminder to ${customerName}...`);
+    alert(`Reminder sent to ${customerName} successfully!`);
+  }
+
+  const handleExport = (format: 'Excel' | 'PDF') => {
+    alert(`Exporting ${reportType} Report as ${format}...`);
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -95,13 +107,22 @@ export default function ReportPage() {
             <p className="text-slate-500">Analyze your furniture business performance with detailed insights.</p>
           </div>
           <div className="flex gap-2">
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+            <button 
+              onClick={() => window.print()}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+            >
               <Printer size={18} /> Print Report
             </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition-colors">
+            <button 
+              onClick={() => handleExport('Excel')}
+              className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-emerald-600/20 hover:bg-emerald-700 transition-colors"
+            >
               <Download size={18} /> Export Excel
             </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-amber-600/20 hover:bg-amber-700 transition-colors">
+            <button 
+              onClick={() => handleExport('PDF')}
+              className="flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-amber-600/20 hover:bg-amber-700 transition-colors"
+            >
               <Download size={18} /> Export PDF
             </button>
           </div>
@@ -217,7 +238,16 @@ export default function ReportPage() {
                         <td className="px-6 py-4 text-sm font-bold text-rose-600">৳{customer.totalDue.toLocaleString()}</td>
                         <td className="px-6 py-4 text-sm text-slate-600">{customer.lastInvoiceDate}</td>
                         <td className="px-6 py-4 text-right">
-                          <button className="text-xs font-bold text-amber-600 hover:underline">Send Reminder</button>
+                          <button 
+                            onClick={() => handleSendReminder(customer.name)}
+                            className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors group relative"
+                            title="Send Reminder"
+                          >
+                            <Send size={18} />
+                            <span className="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-slate-800 text-white text-[10px] py-1 px-2 rounded whitespace-nowrap">
+                              Send Reminder
+                            </span>
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -227,7 +257,27 @@ export default function ReportPage() {
             </div>
           </div>
         ) : (
-          <>
+          <div className="space-y-6">
+            {/* Sales Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Revenue</p>
+                <h3 className="text-2xl font-bold text-slate-900">৳{salesData.reduce((acc, curr) => acc + curr.sales, 0).toLocaleString()}</h3>
+              </div>
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Profit</p>
+                <h3 className="text-2xl font-bold text-emerald-600">৳{salesData.reduce((acc, curr) => acc + curr.profit, 0).toLocaleString()}</h3>
+              </div>
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Avg. Daily Sales</p>
+                <h3 className="text-2xl font-bold text-amber-600">৳{(salesData.reduce((acc, curr) => acc + curr.sales, 0) / salesData.length).toLocaleString()}</h3>
+              </div>
+              <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Conversion Rate</p>
+                <h3 className="text-2xl font-bold text-slate-900">12.4%</h3>
+              </div>
+            </div>
+
             {/* Report Content */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Chart */}
@@ -358,7 +408,7 @@ export default function ReportPage() {
             </table>
           </div>
         </div>
-      </>
+      </div>
     )}
   </div>
 </DashboardLayout>
