@@ -412,55 +412,45 @@ export default function POSWood() {
               <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                 <ShoppingCart size={20} /> Current Order
               </h2>
-              <button 
-                onClick={() => {
-                  setCart([])
-                  setSelectedCustomer('Walk-in Customer')
-                }}
-                className="text-rose-500 hover:text-rose-600 text-sm font-semibold"
-              >
-                Clear All
-              </button>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
-                <input 
-                  type="text"
-                  placeholder="Search customer..."
-                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-amber-500 transition-colors"
-                  onChange={(e) => {
-                    const term = e.target.value.toLowerCase()
-                    if (term === '') {
-                      setSelectedCustomer('Walk-in Customer')
-                    } else {
-                      const found = customers.find(c => 
-                        c.name.toLowerCase().includes(term) || 
-                        c.phone.includes(term)
-                      )
-                      if (found) setSelectedCustomer(found.name)
-                    }
-                  }}
-                />
-              </div>
               <div className="flex items-center gap-2">
-                <select 
-                  className="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors"
-                  value={selectedCustomer}
-                  onChange={(e) => setSelectedCustomer(e.target.value)}
-                >
-                  <option value="Walk-in Customer">Walk-in Customer</option>
-                  {customers.map(c => (
-                    <option key={c.id} value={c.name}>{c.name} ({c.phone})</option>
-                  ))}
-                </select>
-                <button 
-                  onClick={() => setIsAddingCustomer(true)}
-                  className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
-                  title="Add New Customer"
-                >
-                  <UserPlus size={18} />
-                </button>
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                  <input 
+                    type="text"
+                    list="customer-list"
+                    placeholder="Search or Select Customer"
+                    className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors"
+                    value={selectedCustomer}
+                    onChange={(e) => setSelectedCustomer(e.target.value)}
+                  />
+                  <datalist id="customer-list">
+                    <option value="Walk-in Customer" />
+                    {customers.map(c => (
+                      <option key={c.id} value={c.name}>{c.phone}</option>
+                    ))}
+                  </datalist>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button 
+                    onClick={() => setIsAddingCustomer(true)}
+                    className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
+                    title="Add New Customer"
+                  >
+                    <UserPlus size={18} />
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setCart([])
+                      setSelectedCustomer('Walk-in Customer')
+                    }}
+                    className="p-2.5 bg-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center"
+                    title="Clear All"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -487,25 +477,21 @@ export default function POSWood() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="flex items-center gap-4 group"
+                    className="flex items-center justify-between gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100 group"
                   >
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-100 relative">
-                      <Image 
-                        src={item.image} 
-                        alt={item.name} 
-                        fill
-                        className="object-cover" 
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-bold text-slate-800">{item.name}</h4>
-                      <div className="flex flex-col">
-                        <p className="text-[10px] text-slate-500">৳{item.price} × {item.cft.toFixed(5)} {item.unit}</p>
-                        <p className="text-xs font-bold text-amber-600">৳{(item.price * item.cft).toFixed(2)}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-emerald-600">{item.subCategory}</span>
+                        <span className="text-[10px] text-slate-400">({item.width}*{item.length})</span>
+                        <span className="text-xs font-bold text-slate-800">= ৳{(item.price * item.cft).toFixed(2)}</span>
                       </div>
                     </div>
-                    <button onClick={() => removeFromCart(item.id)} className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all"><Trash2 size={20} /></button>
+                    <button 
+                      onClick={() => removeFromCart(item.id)} 
+                      className="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </motion.div>
                 ))
               )}

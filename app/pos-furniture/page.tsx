@@ -342,58 +342,48 @@ export default function POSFurniture() {
           <div className="p-6 bg-slate-900 text-white space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold flex items-center gap-2">
-                <ShoppingCart size={20} /> Order Summary
+                <ShoppingCart size={20} /> Current Order
               </h2>
-              <button 
-                onClick={() => {
-                  setCart([])
-                  setSelectedCustomer('Walk-in Customer')
-                }}
-                className="text-slate-400 hover:text-white text-sm font-semibold"
-              >
-                Reset
-              </button>
             </div>
             
             <div className="flex flex-col gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
-                <input 
-                  type="text"
-                  placeholder="Search customer..."
-                  className="w-full pl-9 pr-4 py-2 bg-white/10 border border-white/10 rounded-xl text-xs outline-none focus:border-amber-500 transition-colors text-white placeholder:text-slate-400"
-                  onChange={(e) => {
-                    const term = e.target.value.toLowerCase()
-                    if (term === '') {
-                      setSelectedCustomer('Walk-in Customer')
-                    } else {
-                      const found = customers.find(c => 
-                        c.name.toLowerCase().includes(term) || 
-                        c.phone.includes(term)
-                      )
-                      if (found) setSelectedCustomer(found.name)
-                    }
-                  }}
-                />
-              </div>
               <div className="flex items-center gap-2">
-                <select 
-                  className="flex-1 p-2.5 bg-white/10 border border-white/10 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors text-white"
-                  value={selectedCustomer}
-                  onChange={(e) => setSelectedCustomer(e.target.value)}
-                >
-                  <option value="Walk-in Customer" className="text-slate-900">Walk-in Customer</option>
-                  {customers.map(c => (
-                    <option key={c.id} value={c.name} className="text-slate-900">{c.name} ({c.phone})</option>
-                  ))}
-                </select>
-                <button 
-                  onClick={() => setIsAddingCustomer(true)}
-                  className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
-                  title="Add New Customer"
-                >
-                  <UserPlus size={18} />
-                </button>
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                  <input 
+                    type="text"
+                    list="customer-list-furniture"
+                    placeholder="Search or Select Customer"
+                    className="w-full pl-9 pr-4 py-2.5 bg-white/10 border border-white/10 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors text-white"
+                    value={selectedCustomer}
+                    onChange={(e) => setSelectedCustomer(e.target.value)}
+                  />
+                  <datalist id="customer-list-furniture">
+                    <option value="Walk-in Customer" />
+                    {customers.map(c => (
+                      <option key={c.id} value={c.name}>{c.phone}</option>
+                    ))}
+                  </datalist>
+                </div>
+                <div className="flex items-center gap-1">
+                  <button 
+                    onClick={() => setIsAddingCustomer(true)}
+                    className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
+                    title="Add New Customer"
+                  >
+                    <UserPlus size={18} />
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setCart([])
+                      setSelectedCustomer('Walk-in Customer')
+                    }}
+                    className="p-2.5 bg-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center border border-rose-500/30"
+                    title="Clear All"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -412,27 +402,26 @@ export default function POSFurniture() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="flex items-center gap-4"
+                    className="flex items-center justify-between gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100 group"
                   >
-                    <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-slate-100">
-                      <Image 
-                        src={item.image} 
-                        alt={item.name} 
-                        fill
-                        className="object-cover" 
-                        referrerPolicy="no-referrer"
-                      />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-800 line-clamp-1">{item.name}</span>
+                        <span className="text-[10px] text-slate-400">({item.quantity} pcs)</span>
+                        <span className="text-xs font-bold text-amber-600">= ৳{(item.price * item.quantity).toLocaleString()}</span>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-bold text-slate-800 line-clamp-1">{item.name}</h4>
-                      <p className="text-xs text-slate-500">৳{item.price.toLocaleString()}</p>
+                    <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200">
+                      <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:bg-slate-50 rounded text-slate-500"><Minus size={12} /></button>
+                      <span className="text-[10px] font-bold w-4 text-center">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:bg-slate-50 rounded text-slate-500"><Plus size={12} /></button>
                     </div>
-                    <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-lg">
-                      <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:bg-white rounded shadow-sm text-slate-500"><Minus size={14} /></button>
-                      <span className="text-sm font-bold w-6 text-center">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:bg-white rounded shadow-sm text-slate-500"><Plus size={14} /></button>
-                    </div>
-                    <button onClick={() => removeFromCart(item.id)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors"><Trash2 size={16} /></button>
+                    <button 
+                      onClick={() => removeFromCart(item.id)} 
+                      className="p-1.5 text-slate-300 hover:text-rose-500 transition-colors"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </motion.div>
                 ))
               )}
