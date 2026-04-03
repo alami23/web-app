@@ -31,14 +31,7 @@ export default function CustomerPage() {
   const [customersList, setCustomersList] = useState<Customer[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('customers_list')
-      if (saved && saved !== 'undefined') {
-        try {
-          return JSON.parse(saved)
-        } catch (e) {
-          console.error('Failed to parse customers_list', e)
-        }
-      }
-      return initialCustomers
+      return saved ? JSON.parse(saved) : initialCustomers
     }
     return initialCustomers
   })

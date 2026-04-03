@@ -48,7 +48,7 @@ export default function FurnitureInventoryPage() {
   const [products, setProducts] = useState<FurnitureProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('furniture_inventory');
-      if (saved && saved !== 'undefined') {
+      if (saved) {
         try {
           return JSON.parse(saved);
         } catch (e) {

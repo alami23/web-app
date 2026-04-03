@@ -47,7 +47,7 @@ export default function POSWood() {
   const [products, setProducts] = useState<WoodProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('wood_inventory');
-      if (saved && saved !== 'undefined') {
+      if (saved) {
         try {
           return JSON.parse(saved);
         } catch (e) {
@@ -77,12 +77,8 @@ export default function POSWood() {
   useEffect(() => {
     const loadCustomers = () => {
       const saved = localStorage.getItem('customers_list')
-      if (saved && saved !== 'undefined') {
-        try {
-          setCustomers(JSON.parse(saved))
-        } catch (e) {
-          console.error('Failed to parse customers_list', e)
-        }
+      if (saved) {
+        setCustomers(JSON.parse(saved))
       }
     }
     loadCustomers()
@@ -204,75 +200,50 @@ export default function POSWood() {
       <div className="flex flex-col lg:flex-row gap-3 h-[calc(100vh-120px)] overflow-hidden">
         {/* Left: Product Selection */}
         <div className="flex-1 flex flex-col gap-3 min-w-0 overflow-hidden">
-          <div className="space-y-3 sticky top-0 z-20 bg-slate-50/95 backdrop-blur-md py-4 -mt-4 mb-2">
-            <div className="relative flex-1 w-full group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-600 transition-colors" size={20} />
+          <div className="flex flex-col md:flex-row gap-4 items-center sticky top-0 z-20 bg-slate-50/80 backdrop-blur-md py-4 -mt-4 mb-2">
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
                 placeholder="Search wood items..." 
-                className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all shadow-sm hover:border-slate-300"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
-            <div className="space-y-3">
-              <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-1 px-1">
-                {Object.keys(categoryData).map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      setSelectedCategory(cat)
-                      setSelectedSubCategory('All')
-                    }}
-                    className={cn(
-                      "flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition-all border",
-                      selectedCategory === cat 
-                        ? "bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20 scale-105" 
-                        : "bg-white text-slate-600 border-slate-200 hover:border-amber-500 hover:text-amber-600"
-                    )}
-                  >
-                    {cat}
-                  </button>
-                ))}
+            <div className="flex gap-3 w-full md:w-auto">
+              <div className="flex flex-col gap-1 flex-1 md:w-48">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Category</label>
+                <select 
+                  className="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                  value={selectedCategory}
+                  onChange={(e) => {
+                    setSelectedCategory(e.target.value)
+                    setSelectedSubCategory('All')
+                  }}
+                >
+                  {Object.keys(categoryData).map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
               </div>
-
-              <AnimatePresence mode="wait">
-                {selectedCategory !== 'All' && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-1 px-1"
-                  >
-                    <button
-                      onClick={() => setSelectedSubCategory('All')}
-                      className={cn(
-                        "px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border",
-                        selectedSubCategory === 'All'
-                          ? "bg-amber-100 text-amber-700 border-amber-200 shadow-sm"
-                          : "bg-slate-100 text-slate-500 border-transparent hover:bg-slate-200"
-                      )}
-                    >
-                      All Cars
-                    </button>
-                    {carNumbers.filter(car => car !== 'All').map(car => (
-                      <button
-                        key={car}
-                        onClick={() => setSelectedSubCategory(car)}
-                        className={cn(
-                          "px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border",
-                          selectedSubCategory === car
-                            ? "bg-amber-600 text-white border-amber-600 shadow-md"
-                            : "bg-white text-slate-500 border-slate-200 hover:border-amber-300 hover:text-amber-600"
-                        )}
-                      >
-                        {car}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="flex flex-col gap-1 flex-1 md:w-48">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Car No</label>
+                <select 
+                  disabled={selectedCategory === 'All'}
+                  className="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all disabled:bg-slate-50 disabled:text-slate-400"
+                  value={selectedSubCategory}
+                  onChange={(e) => setSelectedSubCategory(e.target.value)}
+                >
+                  {selectedCategory === 'All' ? (
+                    <option value="All">Select Category First</option>
+                  ) : (
+                    carNumbers.map(car => (
+                      <option key={car} value={car}>{car}</option>
+                    ))
+                  )}
+                </select>
+              </div>
             </div>
           </div>
 
