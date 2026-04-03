@@ -36,7 +36,14 @@ export default function AddCustomerModal({ isOpen, onClose, onAdd }: AddCustomer
     } else {
       // Fallback: save to localStorage if no onAdd provided
       const saved = localStorage.getItem('customers_list')
-      const current = (saved && saved !== 'undefined') ? JSON.parse(saved) : []
+      let current = []
+      if (saved && saved !== 'undefined') {
+        try {
+          current = JSON.parse(saved)
+        } catch (e) {
+          console.error('Failed to parse customers_list', e)
+        }
+      }
       localStorage.setItem('customers_list', JSON.stringify([...current, newCustomer]))
       window.dispatchEvent(new Event('storage')) // Trigger update in other components
     }

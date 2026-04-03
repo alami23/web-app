@@ -37,10 +37,14 @@ function StatementContent() {
     if (customerId) {
       const saved = localStorage.getItem('customers_list')
       if (saved && saved !== 'undefined') {
-        const list = JSON.parse(saved) as Customer[]
-        const found = list.find(c => c.id === customerId)
-        if (found) {
-          setCustomer(found)
+        try {
+          const list = JSON.parse(saved) as Customer[]
+          const found = list.find(c => c.id === customerId)
+          if (found) {
+            setCustomer(found)
+          }
+        } catch (e) {
+          console.error('Failed to parse customers_list', e)
         }
       }
     }

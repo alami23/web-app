@@ -90,7 +90,11 @@ export default function POSFurniture() {
     const loadCustomers = () => {
       const saved = localStorage.getItem('customers_list')
       if (saved && saved !== 'undefined') {
-        setCustomers(JSON.parse(saved))
+        try {
+          setCustomers(JSON.parse(saved))
+        } catch (e) {
+          console.error('Failed to parse customers_list', e)
+        }
       }
     }
     loadCustomers()
