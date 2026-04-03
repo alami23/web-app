@@ -20,7 +20,7 @@ import {
   LayoutGrid,
   List
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, safeParse } from '@/lib/utils'
 import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image'
 
@@ -48,13 +48,7 @@ export default function FurnitureInventoryPage() {
   const [products, setProducts] = useState<FurnitureProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('furniture_inventory');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error('Failed to parse furniture inventory', e);
-        }
-      }
+      return safeParse(saved, initialFurnitureProducts);
     }
     return initialFurnitureProducts;
   });

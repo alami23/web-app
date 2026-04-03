@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Search, Printer, Download, User, Calendar, ArrowUpRight, ArrowDownLeft, ChevronLeft } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, safeParse } from '@/lib/utils'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -27,7 +27,7 @@ const transactions = [
   { id: 'TXN-104', date: '2024-03-10', type: 'Return', ref: 'RET-001', debit: 0, credit: 2000, balance: 10000 },
 ]
 
-export default function CustomerStatementPage() {
+function CustomerStatementContent() {
   const searchParams = useSearchParams()
   const customerId = searchParams.get('id')
   const [customer, setCustomer] = useState<Customer | null>(null)
@@ -35,12 +35,10 @@ export default function CustomerStatementPage() {
   useEffect(() => {
     if (customerId) {
       const saved = localStorage.getItem('customers_list')
-      if (saved) {
-        const list = JSON.parse(saved) as Customer[]
-        const found = list.find(c => c.id === customerId)
-        if (found) {
-          setCustomer(found)
-        }
+      const list = safeParse(saved, [] as Customer[])
+      const found = list.find(c => c.id === customerId)
+      if (found) {
+        setCustomer(found)
       }
     }
   }, [customerId])
@@ -168,5 +166,19 @@ export default function CustomerStatementPage() {
         </div>
       </div>
     </DashboardLayout>
+  )
+}
+
+export default function CustomerStatementPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-[60vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+        </div>
+      </DashboardLayout>
+    }>
+      <CustomerStatementContent />
+    </Suspense>
   )
 }

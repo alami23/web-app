@@ -18,7 +18,7 @@ import {
   X,
   Camera
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, safeParse } from '@/lib/utils'
 import { motion, AnimatePresence } from 'motion/react'
 import Image from 'next/image'
 
@@ -53,13 +53,7 @@ export default function WoodInventoryPage() {
   const [products, setProducts] = useState<WoodProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('wood_inventory');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error('Failed to parse wood inventory', e);
-        }
-      }
+      return safeParse(saved, initialWoodProducts);
     }
     return initialWoodProducts;
   });

@@ -5,7 +5,7 @@ import DashboardLayout from '@/components/DashboardLayout'
 import Image from 'next/image'
 import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Filter, Pencil, Check, X, Camera, Upload, UserPlus } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { cn } from '@/lib/utils'
+import { cn, safeParse } from '@/lib/utils'
 import AddCustomerModal from '@/components/AddCustomerModal'
 
 const initialWoodProducts = [
@@ -47,13 +47,7 @@ export default function POSWood() {
   const [products, setProducts] = useState<WoodProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('wood_inventory');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error('Failed to parse wood inventory', e);
-        }
-      }
+      return safeParse(saved, initialWoodProducts);
     }
     return initialWoodProducts;
   });
@@ -77,9 +71,7 @@ export default function POSWood() {
   useEffect(() => {
     const loadCustomers = () => {
       const saved = localStorage.getItem('customers_list')
-      if (saved) {
-        setCustomers(JSON.parse(saved))
-      }
+      setCustomers(safeParse(saved, []))
     }
     loadCustomers()
     window.addEventListener('storage', loadCustomers)
@@ -193,7 +185,7 @@ export default function POSWood() {
 
   const carNumbers = ['All', ...Array.from(new Set(products
     .filter(p => selectedCategory === 'All' || p.category === selectedCategory)
-    .map(p => p.carNo)))].sort()
+    .map(p => p.carNo))).sort()]
 
   return (
     <DashboardLayout>

@@ -5,7 +5,7 @@ import DashboardLayout from '@/components/DashboardLayout'
 import Image from 'next/image'
 import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Armchair, LayoutGrid, List, Check, UserPlus } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { cn } from '@/lib/utils'
+import { cn, safeParse } from '@/lib/utils'
 import AddCustomerModal from '@/components/AddCustomerModal'
 
 interface FurnitureProduct {
@@ -49,13 +49,7 @@ export default function POSFurniture() {
   const [products, setProducts] = useState<FurnitureProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('furniture_inventory');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error('Failed to parse furniture inventory', e);
-        }
-      }
+      return safeParse(saved, initialFurnitureProducts);
     }
     return initialFurnitureProducts;
   });
@@ -77,9 +71,7 @@ export default function POSFurniture() {
   useEffect(() => {
     const loadCustomers = () => {
       const saved = localStorage.getItem('customers_list')
-      if (saved) {
-        setCustomers(JSON.parse(saved))
-      }
+      setCustomers(safeParse(saved, []))
     }
     loadCustomers()
     window.addEventListener('storage', loadCustomers)

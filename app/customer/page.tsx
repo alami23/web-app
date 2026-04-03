@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Search, Plus, UserPlus, Phone, MapPin, MoreVertical, Mail, MessageSquare, FileText } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, safeParse } from '@/lib/utils'
 import Image from 'next/image'
 import AddCustomerModal from '@/components/AddCustomerModal'
 import Link from 'next/link'
@@ -31,7 +31,7 @@ export default function CustomerPage() {
   const [customersList, setCustomersList] = useState<Customer[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('customers_list')
-      return saved ? JSON.parse(saved) : initialCustomers
+      return safeParse(saved, initialCustomers)
     }
     return initialCustomers
   })

@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { X, Camera, User, Phone, MapPin, Mail, Save } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
+import { safeParse } from '@/lib/utils'
 
 interface AddCustomerModalProps {
   isOpen: boolean
@@ -36,7 +37,7 @@ export default function AddCustomerModal({ isOpen, onClose, onAdd }: AddCustomer
     } else {
       // Fallback: save to localStorage if no onAdd provided
       const saved = localStorage.getItem('customers_list')
-      const current = saved ? JSON.parse(saved) : []
+      const current = safeParse(saved, [])
       localStorage.setItem('customers_list', JSON.stringify([...current, newCustomer]))
       window.dispatchEvent(new Event('storage')) // Trigger update in other components
     }
