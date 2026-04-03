@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import Image from 'next/image'
-import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Armchair, LayoutGrid, List, Check, UserPlus } from 'lucide-react'
+import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Armchair, LayoutGrid, List, Check, UserPlus, Bed, Coffee, Briefcase, Tv, Layers, Sparkles, Archive, Home } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn } from '@/lib/utils'
 import AddCustomerModal from '@/components/AddCustomerModal'
@@ -32,6 +32,18 @@ const initialFurnitureProducts: FurnitureProduct[] = [
 ]
 
 const categories = ['All', 'Bed', 'Sofa', 'Dining', 'Chair', 'Wardrobe', 'Office', 'Dressing', 'TV Unit', 'Shelf']
+const categoryIcons: Record<string, any> = {
+  'All': Home,
+  'Bed': Bed,
+  'Sofa': Armchair,
+  'Dining': Coffee,
+  'Chair': Armchair,
+  'Wardrobe': Archive,
+  'Office': Briefcase,
+  'Dressing': Sparkles,
+  'TV Unit': Tv,
+  'Shelf': Layers
+}
 const subCategoriesMap: Record<string, string[]> = {
   'All': [],
   'Bed': ['Single', 'Double', 'King', 'Queen'],
@@ -161,86 +173,105 @@ export default function POSFurniture() {
     <DashboardLayout>
       <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-120px)]">
         {/* Left: Product Selection */}
-        <div className="flex-1 flex flex-col gap-6 min-w-0">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input 
-                type="text" 
-                placeholder="Search furniture..." 
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex bg-white border border-slate-200 rounded-xl p-1">
-                <button 
-                  onClick={() => setViewMode('grid')}
-                  className={cn("p-1.5 rounded-lg transition-colors", viewMode === 'grid' ? "bg-slate-100 text-amber-600" : "text-slate-400")}
-                >
-                  <LayoutGrid size={18} />
-                </button>
-                <button 
-                  onClick={() => setViewMode('list')}
-                  className={cn("p-1.5 rounded-lg transition-colors", viewMode === 'list' ? "bg-slate-100 text-amber-600" : "text-slate-400")}
-                >
-                  <List size={18} />
-                </button>
+        <div className="flex-1 flex flex-col gap-4 min-w-0">
+          <div className="space-y-4 sticky top-0 z-20 bg-slate-50/95 backdrop-blur-md py-4 -mt-4">
+            <div className="flex flex-col md:flex-row gap-4 items-center">
+              <div className="relative flex-1 w-full group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-600 transition-colors" size={20} />
+                <input 
+                  type="text" 
+                  placeholder="Search premium furniture..." 
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all shadow-sm hover:border-slate-300"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setActiveCategory(cat)
-                    setActiveSubCategory('All')
-                  }}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all",
-                    activeCategory === cat 
-                      ? "bg-amber-600 text-white shadow-lg shadow-amber-600/20" 
-                      : "bg-white text-slate-600 border border-slate-200 hover:border-amber-500"
-                  )}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {activeCategory !== 'All' && subCategoriesMap[activeCategory] && (
-              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                <button
-                  onClick={() => setActiveSubCategory('All')}
-                  className={cn(
-                    "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all",
-                    activeSubCategory === 'All'
-                      ? "bg-slate-800 text-white"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  )}
-                >
-                  All {activeCategory}
-                </button>
-                {subCategoriesMap[activeCategory].map(sub => (
-                  <button
-                    key={sub}
-                    onClick={() => setActiveSubCategory(sub)}
+              <div className="flex items-center gap-2 self-stretch">
+                <div className="flex bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm">
+                  <button 
+                    onClick={() => setViewMode('grid')}
                     className={cn(
-                      "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all",
-                      activeSubCategory === sub
-                        ? "bg-amber-100 text-amber-700 border border-amber-200"
-                        : "bg-white text-slate-500 border border-slate-200 hover:border-amber-300"
+                      "p-2 rounded-xl transition-all", 
+                      viewMode === 'grid' ? "bg-amber-600 text-white shadow-md" : "text-slate-400 hover:text-slate-600"
                     )}
                   >
-                    {sub}
+                    <LayoutGrid size={20} />
                   </button>
-                ))}
+                  <button 
+                    onClick={() => setViewMode('list')}
+                    className={cn(
+                      "p-2 rounded-xl transition-all", 
+                      viewMode === 'list' ? "bg-amber-600 text-white shadow-md" : "text-slate-400 hover:text-slate-600"
+                    )}
+                  >
+                    <List size={20} />
+                  </button>
+                </div>
               </div>
-            )}
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-1 px-1">
+                {categories.map(cat => {
+                  const Icon = categoryIcons[cat] || Home
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => {
+                        setActiveCategory(cat)
+                        setActiveSubCategory('All')
+                      }}
+                      className={cn(
+                        "flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition-all border",
+                        activeCategory === cat 
+                          ? "bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20 scale-105" 
+                          : "bg-white text-slate-600 border-slate-200 hover:border-amber-500 hover:text-amber-600"
+                      )}
+                    >
+                      <Icon size={18} className={cn(activeCategory === cat ? "text-amber-400" : "text-slate-400")} />
+                      {cat}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <AnimatePresence mode="wait">
+                {activeCategory !== 'All' && subCategoriesMap[activeCategory] && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-1 px-1"
+                  >
+                    <button
+                      onClick={() => setActiveSubCategory('All')}
+                      className={cn(
+                        "px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border",
+                        activeSubCategory === 'All'
+                          ? "bg-amber-100 text-amber-700 border-amber-200 shadow-sm"
+                          : "bg-slate-100 text-slate-500 border-transparent hover:bg-slate-200"
+                      )}
+                    >
+                      All {activeCategory}
+                    </button>
+                    {subCategoriesMap[activeCategory].map(sub => (
+                      <button
+                        key={sub}
+                        onClick={() => setActiveSubCategory(sub)}
+                        className={cn(
+                          "px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border",
+                          activeSubCategory === sub
+                            ? "bg-amber-600 text-white border-amber-600 shadow-md"
+                            : "bg-white text-slate-500 border-slate-200 hover:border-amber-300 hover:text-amber-600"
+                        )}
+                      >
+                        {sub}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
@@ -261,10 +292,20 @@ export default function POSFurniture() {
                         className="object-cover group-hover:scale-110 transition-transform duration-700" 
                         referrerPolicy="no-referrer"
                       />
-                      <div className="absolute top-3 left-3 z-10">
-                        <span className="bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+                      <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
+                        <span className="bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold text-slate-900 uppercase tracking-wider shadow-sm">
                           {product.category}
                         </span>
+                        {product.subCategory && (
+                          <span className="bg-amber-500/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-wider shadow-sm">
+                            {product.subCategory}
+                          </span>
+                        )}
+                      </div>
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <div className="bg-white text-slate-900 px-4 py-2 rounded-xl font-bold shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all">
+                          Add to Cart
+                        </div>
                       </div>
                     </div>
                     <div className="p-4">
@@ -315,61 +356,72 @@ export default function POSFurniture() {
         </div>
 
         {/* Right: Cart/Checkout */}
-        <div className="w-full lg:w-[400px] bg-white rounded-3xl border border-slate-200 shadow-xl flex flex-col overflow-hidden">
-          <div className="p-6 bg-slate-900 text-white space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <ShoppingCart size={20} /> Order Summary
-              </h2>
-              <button 
-                onClick={() => {
-                  setCart([])
-                  setSelectedCustomer('Walk-in Customer')
-                }}
-                className="text-slate-400 hover:text-white text-sm font-semibold"
-              >
-                Reset
-              </button>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <select 
-                className="flex-1 p-2.5 bg-white/10 border border-white/10 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors text-white"
-                value={selectedCustomer}
-                onChange={(e) => setSelectedCustomer(e.target.value)}
-              >
-                <option value="Walk-in Customer" className="text-slate-900">Walk-in Customer</option>
-                {customers.map(c => (
-                  <option key={c.id} value={c.name} className="text-slate-900">{c.name} ({c.phone})</option>
-                ))}
-              </select>
-              <button 
-                onClick={() => setIsAddingCustomer(true)}
-                className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
-                title="Add New Customer"
-              >
-                <UserPlus size={18} />
-              </button>
+        <div className="w-full lg:w-[420px] bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
+          <div className="p-8 bg-slate-900 text-white space-y-6 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold flex items-center gap-3">
+                  <div className="bg-amber-500 p-2 rounded-xl">
+                    <ShoppingCart size={24} className="text-slate-900" />
+                  </div>
+                  Cart
+                </h2>
+                <button 
+                  onClick={() => {
+                    setCart([])
+                    setSelectedCustomer('Walk-in Customer')
+                  }}
+                  className="text-slate-400 hover:text-white text-sm font-semibold transition-colors"
+                >
+                  Clear All
+                </button>
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Customer Details</label>
+                <div className="flex items-center gap-2">
+                  <select 
+                    className="flex-1 p-3 bg-white/5 border border-white/10 rounded-2xl text-sm outline-none focus:border-amber-500 transition-all text-white appearance-none cursor-pointer hover:bg-white/10"
+                    value={selectedCustomer}
+                    onChange={(e) => setSelectedCustomer(e.target.value)}
+                  >
+                    <option value="Walk-in Customer" className="text-slate-900">Walk-in Customer</option>
+                    {customers.map(c => (
+                      <option key={c.id} value={c.name} className="text-slate-900">{c.name} ({c.phone})</option>
+                    ))}
+                  </select>
+                  <button 
+                    onClick={() => setIsAddingCustomer(true)}
+                    className="p-3 bg-amber-500 hover:bg-amber-600 text-slate-900 rounded-2xl transition-all shadow-lg shadow-amber-500/20 active:scale-95"
+                    title="Add New Customer"
+                  >
+                    <UserPlus size={20} />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
             <AnimatePresence mode="popLayout">
               {cart.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2">
-                  <Armchair size={48} strokeWidth={1} />
-                  <p>No furniture selected</p>
+                <div className="h-full flex flex-col items-center justify-center text-slate-300 space-y-4 py-12">
+                  <div className="bg-slate-50 p-8 rounded-full">
+                    <Armchair size={64} strokeWidth={1} className="text-slate-200" />
+                  </div>
+                  <p className="font-medium">Your cart is empty</p>
                 </div>
               ) : (
                 cart.map(item => (
                   <motion.div
                     key={item.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    className="flex items-center gap-4"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="flex items-center gap-4 group"
                   >
-                    <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-slate-100">
+                    <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm">
                       <Image 
                         src={item.image} 
                         alt={item.name} 
@@ -378,46 +430,46 @@ export default function POSFurniture() {
                         referrerPolicy="no-referrer"
                       />
                     </div>
-                    <div className="flex-1">
-                      <h4 className="text-sm font-bold text-slate-800 line-clamp-1">{item.name}</h4>
-                      <p className="text-xs text-slate-500">৳{item.price.toLocaleString()}</p>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-bold text-slate-800 truncate">{item.name}</h4>
+                      <p className="text-xs font-semibold text-amber-600">৳{item.price.toLocaleString()}</p>
                     </div>
-                    <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-lg">
-                      <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:bg-white rounded shadow-sm text-slate-500"><Minus size={14} /></button>
-                      <span className="text-sm font-bold w-6 text-center">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:bg-white rounded shadow-sm text-slate-500"><Plus size={14} /></button>
+                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+                      <button onClick={() => updateQuantity(item.id, -1)} className="p-1.5 hover:bg-white rounded-lg shadow-sm text-slate-600 transition-all active:scale-90"><Minus size={12} /></button>
+                      <span className="text-sm font-bold w-8 text-center text-slate-800">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, 1)} className="p-1.5 hover:bg-white rounded-lg shadow-sm text-slate-600 transition-all active:scale-90"><Plus size={12} /></button>
                     </div>
-                    <button onClick={() => removeFromCart(item.id)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors"><Trash2 size={16} /></button>
+                    <button onClick={() => removeFromCart(item.id)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"><Trash2 size={18} /></button>
                   </motion.div>
                 ))
               )}
             </AnimatePresence>
           </div>
 
-          <div className="p-6 bg-slate-50 border-t border-slate-200 space-y-4">
-            <div className="space-y-2">
-              <div className="flex justify-between text-slate-600">
+          <div className="p-8 bg-slate-50 border-t border-slate-100 space-y-6">
+            <div className="space-y-3">
+              <div className="flex justify-between text-slate-500 text-sm font-medium">
                 <span>Subtotal</span>
-                <span>৳{subtotal.toLocaleString()}</span>
+                <span className="text-slate-900 font-bold">৳{subtotal.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-slate-600">
+              <div className="flex justify-between text-slate-500 text-sm font-medium">
                 <span>Delivery Charge</span>
-                <span>৳{deliveryCharge.toLocaleString()}</span>
+                <span className="text-slate-900 font-bold">৳{deliveryCharge.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-2xl font-bold text-slate-900 pt-2 border-t border-slate-200">
-                <span>Total</span>
-                <span>৳{total.toLocaleString()}</span>
+              <div className="flex justify-between items-end pt-4 border-t border-slate-200">
+                <span className="text-slate-500 text-sm font-bold uppercase tracking-wider">Total Amount</span>
+                <span className="text-3xl font-black text-slate-900">৳{total.toLocaleString()}</span>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <button className="py-4 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
-                <Printer size={18} /> A4 Print
+            <div className="grid grid-cols-2 gap-4">
+              <button className="py-4 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-100 hover:border-slate-300 transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95">
+                <Printer size={20} /> Print
               </button>
               <button 
                 onClick={handleCheckout}
-                className="py-4 px-4 bg-amber-600 text-white rounded-2xl font-bold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20"
+                className="py-4 px-4 bg-amber-600 text-white rounded-2xl font-bold hover:bg-amber-700 transition-all shadow-xl shadow-amber-600/30 active:scale-95 flex items-center justify-center gap-2"
               >
-                Place Order
+                Checkout
               </button>
             </div>
           </div>
