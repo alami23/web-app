@@ -64,6 +64,10 @@ export default function POSFurniture() {
   const [activeSubCategory, setActiveSubCategory] = useState('All')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [isCheckoutSuccess, setIsCheckoutSuccess] = useState(false)
+  const [discount, setDiscount] = useState(0)
+  const [discountType, setDiscountType] = useState<'fixed' | 'percent'>('fixed')
+  const [deliveryCharge, setDeliveryCharge] = useState(0)
+  const [paidAmount, setPaidAmount] = useState(0)
   const [customers, setCustomers] = useState<any[]>([])
   const [selectedCustomer, setSelectedCustomer] = useState('Walk-in Customer')
   const [isAddingCustomer, setIsAddingCustomer] = useState(false)
@@ -130,6 +134,32 @@ export default function POSFurniture() {
       return product
     })
 
+    // Create Invoice
+    const newInvoice = {
+      id: `INV-${Date.now()}`,
+      customer: selectedCustomer,
+      date: new Date().toISOString().split('T')[0],
+      deliveryDate: new Date().toISOString().split('T')[0],
+      amount: total,
+      paid: paidAmount,
+      due: Math.max(0, total - paidAmount),
+      status: paidAmount >= total ? 'Paid' : paidAmount > 0 ? 'Partial' : 'Due',
+      type: 'Furniture',
+      discount,
+      discountType,
+      deliveryCharge,
+      items: cart.map(item => ({
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        total: item.price * item.quantity
+      }))
+    }
+
+    const savedInvoices = localStorage.getItem('invoices_list')
+    const invoices = safeParse(savedInvoices, [])
+    localStorage.setItem('invoices_list', JSON.stringify([newInvoice, ...invoices]))
+
     setProducts(updatedProducts)
     setCart([])
     setIsCheckoutSuccess(true)
@@ -140,8 +170,9 @@ export default function POSFurniture() {
   }
 
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
-  const deliveryCharge = cart.length > 0 ? 500 : 0
-  const total = subtotal + deliveryCharge
+  const discountAmount = discountType === 'fixed' ? discount : (subtotal * discount / 100)
+  const total = subtotal + deliveryCharge - discountAmount
+  const dueAmount = Math.max(0, total - paidAmount)
 
   const filteredProducts = products.filter(p => 
     (activeCategory === 'All' || p.category === activeCategory) &&
@@ -324,24 +355,46 @@ export default function POSFurniture() {
               </button>
             </div>
             
-            <div className="flex items-center gap-2">
-              <select 
-                className="flex-1 p-2.5 bg-white/10 border border-white/10 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors text-white"
-                value={selectedCustomer}
-                onChange={(e) => setSelectedCustomer(e.target.value)}
-              >
-                <option value="Walk-in Customer" className="text-slate-900">Walk-in Customer</option>
-                {customers.map(c => (
-                  <option key={c.id} value={c.name} className="text-slate-900">{c.name} ({c.phone})</option>
-                ))}
-              </select>
-              <button 
-                onClick={() => setIsAddingCustomer(true)}
-                className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
-                title="Add New Customer"
-              >
-                <UserPlus size={18} />
-              </button>
+            <div className="flex flex-col gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                <input 
+                  type="text"
+                  placeholder="Search customer..."
+                  className="w-full pl-9 pr-4 py-2 bg-white/10 border border-white/10 rounded-xl text-xs outline-none focus:border-amber-500 transition-colors text-white placeholder:text-slate-400"
+                  onChange={(e) => {
+                    const term = e.target.value.toLowerCase()
+                    if (term === '') {
+                      setSelectedCustomer('Walk-in Customer')
+                    } else {
+                      const found = customers.find(c => 
+                        c.name.toLowerCase().includes(term) || 
+                        c.phone.includes(term)
+                      )
+                      if (found) setSelectedCustomer(found.name)
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <select 
+                  className="flex-1 p-2.5 bg-white/10 border border-white/10 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors text-white"
+                  value={selectedCustomer}
+                  onChange={(e) => setSelectedCustomer(e.target.value)}
+                >
+                  <option value="Walk-in Customer" className="text-slate-900">Walk-in Customer</option>
+                  {customers.map(c => (
+                    <option key={c.id} value={c.name} className="text-slate-900">{c.name} ({c.phone})</option>
+                  ))}
+                </select>
+                <button 
+                  onClick={() => setIsAddingCustomer(true)}
+                  className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
+                  title="Add New Customer"
+                >
+                  <UserPlus size={18} />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -386,22 +439,71 @@ export default function POSFurniture() {
             </AnimatePresence>
           </div>
 
-          <div className="p-6 bg-slate-50 border-t border-slate-200 space-y-4">
+          <div className="p-6 bg-slate-50 border-t border-slate-200 space-y-3">
             <div className="space-y-2">
-              <div className="flex justify-between text-slate-600">
+              <div className="flex justify-between text-slate-600 text-xs">
                 <span>Subtotal</span>
                 <span>৳{subtotal.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-slate-600">
-                <span>Delivery Charge</span>
-                <span>৳{deliveryCharge.toLocaleString()}</span>
+              
+              {/* Discount Section - One Line */}
+              <div className="flex items-center justify-between gap-2 py-1 border-y border-slate-200/50">
+                <div className="flex items-center gap-1.5 min-w-fit">
+                  <span className="text-slate-600 text-xs">Disc.</span>
+                  <div className="flex bg-white border border-slate-200 rounded-lg p-0.5">
+                    <button 
+                      onClick={() => setDiscountType('fixed')}
+                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'fixed' ? "bg-amber-100 text-amber-700" : "text-slate-400")}
+                    >৳</button>
+                    <button 
+                      onClick={() => setDiscountType('percent')}
+                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'percent' ? "bg-amber-100 text-amber-700" : "text-slate-400")}
+                    >%</button>
+                  </div>
+                </div>
+                <input 
+                  type="number" 
+                  className="flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500"
+                  placeholder="0"
+                  value={discount || ''}
+                  onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
+                />
               </div>
-              <div className="flex justify-between text-2xl font-bold text-slate-900 pt-2 border-t border-slate-200">
+
+              {/* Delivery Charge */}
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-slate-600 text-xs whitespace-nowrap">Delivery Charge</span>
+                <input 
+                  type="number" 
+                  className="w-20 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500"
+                  value={deliveryCharge || ''}
+                  onChange={(e) => setDeliveryCharge(parseFloat(e.target.value) || 0)}
+                />
+              </div>
+
+              <div className="flex justify-between text-sm font-bold text-slate-900 pt-1 border-t border-slate-200">
                 <span>Total</span>
                 <span>৳{total.toLocaleString()}</span>
               </div>
+
+              {/* Payment Section */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-emerald-600 font-bold text-xs">Paid</span>
+                  <input 
+                    type="number" 
+                    className="w-28 p-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-right font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500/20"
+                    value={paidAmount || ''}
+                    onChange={(e) => setPaidAmount(parseFloat(e.target.value) || 0)}
+                  />
+                </div>
+                <div className="flex justify-between text-rose-600 font-bold text-xs">
+                  <span>Due</span>
+                  <span>৳{dueAmount.toLocaleString()}</span>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 pt-1">
               <button className="py-4 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
                 <Printer size={18} /> A4 Print
               </button>

@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Search, Filter, Download, Printer, Eye, MoreHorizontal, Calendar, User, Plus } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, safeParse } from '@/lib/utils'
 
-const invoices = [
+const initialInvoices = [
   { id: 'INV-2024-001', customer: 'Alice Johnson', date: '2024-03-20', deliveryDate: '2024-03-25', amount: 45000, paid: 45000, due: 0, status: 'Paid', type: 'Furniture' },
   { id: 'INV-2024-002', customer: 'Bob Smith', date: '2024-03-19', deliveryDate: '2024-03-22', amount: 12500, paid: 5000, due: 7500, status: 'Partial', type: 'Wood' },
   { id: 'INV-2024-003', customer: 'Charlie Brown', date: '2024-03-18', deliveryDate: '2024-03-28', amount: 32000, paid: 0, due: 32000, status: 'Due', type: 'Furniture' },
@@ -15,6 +15,22 @@ const invoices = [
 
 export default function InvoicePage() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [invoices, setInvoices] = useState<any[]>([])
+
+  useEffect(() => {
+    const loadInvoices = () => {
+      const saved = localStorage.getItem('invoices_list')
+      setInvoices(safeParse(saved, initialInvoices))
+    }
+    loadInvoices()
+    window.addEventListener('storage', loadInvoices)
+    return () => window.removeEventListener('storage', loadInvoices)
+  }, [])
+
+  const filteredInvoices = invoices.filter(inv => 
+    inv.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    inv.customer.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   return (
     <DashboardLayout>
@@ -69,7 +85,7 @@ export default function InvoicePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {invoices.map((inv) => (
+                {filteredInvoices.map((inv) => (
                   <tr key={inv.id} className="hover:bg-slate-50 transition-colors group">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
