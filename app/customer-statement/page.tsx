@@ -36,7 +36,7 @@ function StatementContent() {
   useEffect(() => {
     if (customerId) {
       const saved = localStorage.getItem('customers_list')
-      if (saved) {
+      if (saved && saved !== 'undefined') {
         const list = JSON.parse(saved) as Customer[]
         const found = list.find(c => c.id === customerId)
         if (found) {

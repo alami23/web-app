@@ -61,7 +61,7 @@ export default function POSFurniture() {
   const [products, setProducts] = useState<FurnitureProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('furniture_inventory');
-      if (saved) {
+      if (saved && saved !== 'undefined') {
         try {
           return JSON.parse(saved);
         } catch (e) {
@@ -89,7 +89,7 @@ export default function POSFurniture() {
   useEffect(() => {
     const loadCustomers = () => {
       const saved = localStorage.getItem('customers_list')
-      if (saved) {
+      if (saved && saved !== 'undefined') {
         setCustomers(JSON.parse(saved))
       }
     }
@@ -175,74 +175,23 @@ export default function POSFurniture() {
         {/* Left: Product Selection */}
         <div className="flex-1 flex flex-col gap-4 min-w-0">
           <div className="space-y-4 sticky top-0 z-20 bg-slate-50/95 backdrop-blur-md py-4 -mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-              <div className="md:col-span-5 space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
-                  <Search size={12} /> Search Box
-                </label>
-                <div className="relative group">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-600 transition-colors" size={18} />
-                  <input 
-                    type="text" 
-                    placeholder="Search premium furniture..." 
-                    className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all shadow-sm hover:border-slate-300 font-medium"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
+            <div className="flex flex-col md:flex-row gap-4 items-center">
+              <div className="relative flex-1 w-full group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-amber-600 transition-colors" size={20} />
+                <input 
+                  type="text" 
+                  placeholder="Search premium furniture..." 
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all shadow-sm hover:border-slate-300"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
               </div>
-
-              <div className="md:col-span-3 space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
-                  <LayoutGrid size={12} /> Category Box
-                </label>
-                <div className="relative">
-                  <select 
-                    className="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all shadow-sm hover:border-slate-300 appearance-none font-medium cursor-pointer"
-                    value={activeCategory}
-                    onChange={(e) => {
-                      setActiveCategory(e.target.value)
-                      setActiveSubCategory('All')
-                    }}
-                  >
-                    {categories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                    <Plus size={16} className="rotate-45" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:col-span-3 space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-1">
-                  <Layers size={12} /> Sub Category Box
-                </label>
-                <div className="relative">
-                  <select 
-                    disabled={activeCategory === 'All'}
-                    className="w-full pl-4 pr-10 py-3 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all shadow-sm hover:border-slate-300 appearance-none font-medium cursor-pointer disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed"
-                    value={activeSubCategory}
-                    onChange={(e) => setActiveSubCategory(e.target.value)}
-                  >
-                    <option value="All">All {activeCategory === 'All' ? 'Sub Categories' : activeCategory}</option>
-                    {activeCategory !== 'All' && subCategoriesMap[activeCategory]?.map(sub => (
-                      <option key={sub} value={sub}>{sub}</option>
-                    ))}
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                    <Plus size={16} className="rotate-45" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:col-span-1 flex justify-end">
-                <div className="flex bg-white border border-slate-200 rounded-2xl p-1 shadow-sm">
+              <div className="flex items-center gap-2 self-stretch">
+                <div className="flex bg-white border border-slate-200 rounded-2xl p-1.5 shadow-sm">
                   <button 
                     onClick={() => setViewMode('grid')}
                     className={cn(
-                      "p-2.5 rounded-xl transition-all", 
+                      "p-2 rounded-xl transition-all", 
                       viewMode === 'grid' ? "bg-amber-600 text-white shadow-md" : "text-slate-400 hover:text-slate-600"
                     )}
                   >
@@ -251,7 +200,7 @@ export default function POSFurniture() {
                   <button 
                     onClick={() => setViewMode('list')}
                     className={cn(
-                      "p-2.5 rounded-xl transition-all", 
+                      "p-2 rounded-xl transition-all", 
                       viewMode === 'list' ? "bg-amber-600 text-white shadow-md" : "text-slate-400 hover:text-slate-600"
                     )}
                   >
@@ -259,6 +208,69 @@ export default function POSFurniture() {
                   </button>
                 </div>
               </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-1 px-1">
+                {categories.map(cat => {
+                  const Icon = categoryIcons[cat] || Home
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => {
+                        setActiveCategory(cat)
+                        setActiveSubCategory('All')
+                      }}
+                      className={cn(
+                        "flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition-all border",
+                        activeCategory === cat 
+                          ? "bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-900/20 scale-105" 
+                          : "bg-white text-slate-600 border-slate-200 hover:border-amber-500 hover:text-amber-600"
+                      )}
+                    >
+                      <Icon size={18} className={cn(activeCategory === cat ? "text-amber-400" : "text-slate-400")} />
+                      {cat}
+                    </button>
+                  )
+                })}
+              </div>
+
+              <AnimatePresence mode="wait">
+                {activeCategory !== 'All' && subCategoriesMap[activeCategory] && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-1 px-1"
+                  >
+                    <button
+                      onClick={() => setActiveSubCategory('All')}
+                      className={cn(
+                        "px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border",
+                        activeSubCategory === 'All'
+                          ? "bg-amber-100 text-amber-700 border-amber-200 shadow-sm"
+                          : "bg-slate-100 text-slate-500 border-transparent hover:bg-slate-200"
+                      )}
+                    >
+                      All {activeCategory}
+                    </button>
+                    {subCategoriesMap[activeCategory].map(sub => (
+                      <button
+                        key={sub}
+                        onClick={() => setActiveSubCategory(sub)}
+                        className={cn(
+                          "px-4 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border",
+                          activeSubCategory === sub
+                            ? "bg-amber-600 text-white border-amber-600 shadow-md"
+                            : "bg-white text-slate-500 border-slate-200 hover:border-amber-300 hover:text-amber-600"
+                        )}
+                      >
+                        {sub}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 

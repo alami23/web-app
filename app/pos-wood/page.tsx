@@ -47,7 +47,7 @@ export default function POSWood() {
   const [products, setProducts] = useState<WoodProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('wood_inventory');
-      if (saved) {
+      if (saved && saved !== 'undefined') {
         try {
           return JSON.parse(saved);
         } catch (e) {
@@ -77,7 +77,7 @@ export default function POSWood() {
   useEffect(() => {
     const loadCustomers = () => {
       const saved = localStorage.getItem('customers_list')
-      if (saved) {
+      if (saved && saved !== 'undefined') {
         setCustomers(JSON.parse(saved))
       }
     }

@@ -53,7 +53,7 @@ export default function WoodInventoryPage() {
   const [products, setProducts] = useState<WoodProduct[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('wood_inventory');
-      if (saved) {
+      if (saved && saved !== 'undefined') {
         try {
           return JSON.parse(saved);
         } catch (e) {

@@ -31,7 +31,7 @@ export default function CustomerPage() {
   const [customersList, setCustomersList] = useState<Customer[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('customers_list')
-      return saved ? JSON.parse(saved) : initialCustomers
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : initialCustomers
     }
     return initialCustomers
   })
