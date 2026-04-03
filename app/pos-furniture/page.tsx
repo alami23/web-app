@@ -12,6 +12,7 @@ interface FurnitureProduct {
   id: number
   name: string
   category: string
+  subCategory: string
   price: number
   stock: number
   image: string
@@ -20,17 +21,29 @@ interface FurnitureProduct {
 }
 
 const initialFurnitureProducts: FurnitureProduct[] = [
-  { id: 1, name: 'Royal King Size Bed', category: 'Bed', price: 45000, stock: 5, image: 'https://picsum.photos/seed/bed1/400/400' },
-  { id: 2, name: 'Modern Velvet Sofa', category: 'Sofa', price: 32000, stock: 8, image: 'https://picsum.photos/seed/sofa1/400/400' },
-  { id: 3, name: 'Classic Dining Table', category: 'Dining', price: 28000, stock: 4, image: 'https://picsum.photos/seed/dining1/400/400' },
-  { id: 4, name: 'Ergonomic Office Chair', category: 'Chair', price: 12000, stock: 15, image: 'https://picsum.photos/seed/chair1/400/400' },
-  { id: 5, name: 'Wooden Wardrobe', category: 'Wardrobe', price: 38000, stock: 3, image: 'https://picsum.photos/seed/wardrobe1/400/400' },
-  { id: 6, name: 'Dressing Table', category: 'Dressing', price: 15000, stock: 6, image: 'https://picsum.photos/seed/dressing1/400/400' },
-  { id: 7, name: 'TV Trolley', category: 'TV Unit', price: 8500, stock: 10, image: 'https://picsum.photos/seed/tv1/400/400' },
-  { id: 8, name: 'Bookshelf', category: 'Shelf', price: 11000, stock: 7, image: 'https://picsum.photos/seed/shelf1/400/400' },
+  { id: 1, name: 'Royal King Size Bed', category: 'Bed', subCategory: 'King', price: 45000, stock: 5, image: 'https://picsum.photos/seed/bed1/400/400' },
+  { id: 2, name: 'Modern Velvet Sofa', category: 'Sofa', subCategory: '3-Seater', price: 32000, stock: 8, image: 'https://picsum.photos/seed/sofa1/400/400' },
+  { id: 3, name: 'Classic Dining Table', category: 'Dining', subCategory: '6-Seater', price: 28000, stock: 4, image: 'https://picsum.photos/seed/dining1/400/400' },
+  { id: 4, name: 'Ergonomic Office Chair', category: 'Chair', subCategory: 'Office', price: 12000, stock: 15, image: 'https://picsum.photos/seed/chair1/400/400' },
+  { id: 5, name: 'Wooden Wardrobe', category: 'Wardrobe', subCategory: '4-Door', price: 38000, stock: 3, image: 'https://picsum.photos/seed/wardrobe1/400/400' },
+  { id: 6, name: 'Dressing Table', category: 'Dressing', subCategory: 'Modern', price: 15000, stock: 6, image: 'https://picsum.photos/seed/dressing1/400/400' },
+  { id: 7, name: 'TV Trolley', category: 'TV Unit', subCategory: 'Floor Stand', price: 8500, stock: 10, image: 'https://picsum.photos/seed/tv1/400/400' },
+  { id: 8, name: 'Bookshelf', category: 'Shelf', subCategory: 'Floor', price: 11000, stock: 7, image: 'https://picsum.photos/seed/shelf1/400/400' },
 ]
 
-const categories = ['All', 'Bed', 'Sofa', 'Dining', 'Chair', 'Wardrobe', 'Office']
+const categories = ['All', 'Bed', 'Sofa', 'Dining', 'Chair', 'Wardrobe', 'Office', 'Dressing', 'TV Unit', 'Shelf']
+const subCategoriesMap: Record<string, string[]> = {
+  'All': [],
+  'Bed': ['Single', 'Double', 'King', 'Queen'],
+  'Sofa': ['1-Seater', '2-Seater', '3-Seater', 'Corner'],
+  'Dining': ['4-Seater', '6-Seater', '8-Seater'],
+  'Chair': ['Office', 'Dining', 'Lounge'],
+  'Wardrobe': ['2-Door', '3-Door', '4-Door'],
+  'Office': ['Desk', 'File Cabinet'],
+  'Dressing': ['Modern', 'Classic'],
+  'TV Unit': ['Wall Mount', 'Floor Stand'],
+  'Shelf': ['Wall', 'Floor']
+}
 
 export default function POSFurniture() {
   const [products, setProducts] = useState<FurnitureProduct[]>(() => {
@@ -54,6 +67,7 @@ export default function POSFurniture() {
   const [cart, setCart] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [activeCategory, setActiveCategory] = useState('All')
+  const [activeSubCategory, setActiveSubCategory] = useState('All')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [isCheckoutSuccess, setIsCheckoutSuccess] = useState(false)
   const [customers, setCustomers] = useState<any[]>([])
@@ -139,6 +153,7 @@ export default function POSFurniture() {
 
   const filteredProducts = products.filter(p => 
     (activeCategory === 'All' || p.category === activeCategory) &&
+    (activeSubCategory === 'All' || p.subCategory === activeSubCategory) &&
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -176,21 +191,56 @@ export default function POSFurniture() {
             </div>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all",
-                  activeCategory === cat 
-                    ? "bg-amber-600 text-white shadow-lg shadow-amber-600/20" 
-                    : "bg-white text-slate-600 border border-slate-200 hover:border-amber-500"
-                )}
-              >
-                {cat}
-              </button>
-            ))}
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setActiveCategory(cat)
+                    setActiveSubCategory('All')
+                  }}
+                  className={cn(
+                    "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all",
+                    activeCategory === cat 
+                      ? "bg-amber-600 text-white shadow-lg shadow-amber-600/20" 
+                      : "bg-white text-slate-600 border border-slate-200 hover:border-amber-500"
+                  )}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {activeCategory !== 'All' && subCategoriesMap[activeCategory] && (
+              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                <button
+                  onClick={() => setActiveSubCategory('All')}
+                  className={cn(
+                    "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all",
+                    activeSubCategory === 'All'
+                      ? "bg-slate-800 text-white"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                  )}
+                >
+                  All {activeCategory}
+                </button>
+                {subCategoriesMap[activeCategory].map(sub => (
+                  <button
+                    key={sub}
+                    onClick={() => setActiveSubCategory(sub)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all",
+                      activeSubCategory === sub
+                        ? "bg-amber-100 text-amber-700 border border-amber-200"
+                        : "bg-white text-slate-500 border border-slate-200 hover:border-amber-300"
+                    )}
+                  >
+                    {sub}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
