@@ -164,6 +164,12 @@ export default function POSWood() {
     setSelectedInvoice(newInvoice)
     setProducts(updatedProducts)
     setCart([])
+    setSelectedCustomer('Walk-in Customer')
+    setDiscount(0)
+    setDiscountType('fixed')
+    setDeliveryCharge(0)
+    setPaidAmount(0)
+    setCustomerSearchTerm('')
     setIsCheckoutSuccess(true)
   }
 
