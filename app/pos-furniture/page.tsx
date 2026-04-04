@@ -193,23 +193,22 @@ export default function POSFurniture() {
               <input 
                 type="text" 
                 placeholder="Search furniture..." 
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
                 value={searchTerm}
-                onFocus={(e) => e.target.select()}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex bg-white border border-slate-200 rounded-xl p-1">
+              <div className="flex bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-1">
                 <button 
                   onClick={() => setViewMode('grid')}
-                  className={cn("p-1.5 rounded-lg transition-colors", viewMode === 'grid' ? "bg-slate-100 text-amber-600" : "text-slate-400")}
+                  className={cn("p-1.5 rounded-lg transition-colors", viewMode === 'grid' ? "bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400" : "text-slate-400 dark:text-slate-500")}
                 >
                   <LayoutGrid size={18} />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
-                  className={cn("p-1.5 rounded-lg transition-colors", viewMode === 'list' ? "bg-slate-100 text-amber-600" : "text-slate-400")}
+                  className={cn("p-1.5 rounded-lg transition-colors", viewMode === 'list' ? "bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400" : "text-slate-400 dark:text-slate-500")}
                 >
                   <List size={18} />
                 </button>
@@ -217,7 +216,7 @@ export default function POSFurniture() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4">
             <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
               {categories.map(cat => (
                 <button
@@ -230,7 +229,7 @@ export default function POSFurniture() {
                     "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all",
                     activeCategory === cat 
                       ? "bg-amber-600 text-white shadow-lg shadow-amber-600/20" 
-                      : "bg-white text-slate-600 border border-slate-200 hover:border-amber-500"
+                      : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-amber-500"
                   )}
                 >
                   {cat}
@@ -245,8 +244,8 @@ export default function POSFurniture() {
                   className={cn(
                     "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all",
                     activeSubCategory === 'All'
-                      ? "bg-slate-800 text-white"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                      ? "bg-slate-800 dark:bg-slate-700 text-white"
+                      : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
                   )}
                 >
                   All {activeCategory}
@@ -258,8 +257,8 @@ export default function POSFurniture() {
                     className={cn(
                       "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all",
                       activeSubCategory === sub
-                        ? "bg-amber-100 text-amber-700 border border-amber-200"
-                        : "bg-white text-slate-500 border border-slate-200 hover:border-amber-300"
+                        ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800"
+                        : "bg-white dark:bg-slate-900 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-amber-300"
                     )}
                   >
                     {sub}
@@ -277,9 +276,9 @@ export default function POSFurniture() {
                     layout
                     key={product.id}
                     onClick={() => addToCart(product)}
-                    className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group overflow-hidden"
+                    className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group overflow-hidden"
                   >
-                    <div className="aspect-[4/3] overflow-hidden bg-slate-100 relative">
+                    <div className="aspect-[4/3] overflow-hidden bg-slate-100 dark:bg-slate-800 relative">
                       <Image 
                         src={product.image} 
                         alt={product.name} 
@@ -288,18 +287,18 @@ export default function POSFurniture() {
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute top-3 left-3 z-10">
-                        <span className="bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold text-amber-700 uppercase tracking-wider">
+                        <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
                           {product.category}
                         </span>
                       </div>
                     </div>
                     <div className="p-4">
-                      <h3 className="font-bold text-slate-800 line-clamp-1">{product.name}</h3>
+                      <h3 className="font-bold text-slate-800 dark:text-slate-100 line-clamp-1">{product.name}</h3>
                       <div className="flex items-center justify-between mt-3">
-                        <span className="text-lg font-bold text-slate-900">৳{product.price.toLocaleString()}</span>
+                        <span className="text-lg font-bold text-slate-900 dark:text-slate-100">৳{product.price.toLocaleString()}</span>
                         <span className={cn(
                           "text-[10px] font-bold px-2 py-0.5 rounded",
-                          product.stock > 5 ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
+                          product.stock > 5 ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" : "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400"
                         )}>
                           {product.stock} IN STOCK
                         </span>
@@ -314,9 +313,9 @@ export default function POSFurniture() {
                   <div 
                     key={product.id}
                     onClick={() => addToCart(product)}
-                    className="bg-white p-3 rounded-xl border border-slate-200 flex items-center gap-4 hover:border-amber-500 cursor-pointer transition-colors"
+                    className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-4 hover:border-amber-500 cursor-pointer transition-colors"
                   >
-                    <div className="relative w-16 h-16 rounded-lg overflow-hidden">
+                    <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800">
                       <Image 
                         src={product.image} 
                         alt={product.name}
@@ -326,12 +325,12 @@ export default function POSFurniture() {
                       />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-bold text-slate-800">{product.name}</h4>
-                      <p className="text-xs text-slate-500">{product.category}</p>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-100">{product.name}</h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{product.category}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-slate-900">৳{product.price.toLocaleString()}</p>
-                      <p className="text-[10px] text-slate-400">{product.stock} available</p>
+                      <p className="font-bold text-slate-900 dark:text-slate-100">৳{product.price.toLocaleString()}</p>
+                      <p className="text-[10px] text-slate-400 dark:text-slate-500">{product.stock} available</p>
                     </div>
                   </div>
                 ))}
@@ -341,8 +340,8 @@ export default function POSFurniture() {
         </div>
 
         {/* Right: Cart/Checkout */}
-        <div className="w-full lg:w-[400px] bg-white rounded-3xl border border-slate-200 shadow-xl flex flex-col overflow-hidden">
-          <div className="p-6 bg-slate-900 text-white space-y-4">
+        <div className="w-full lg:w-[400px] bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col overflow-hidden">
+          <div className="p-6 bg-slate-900 dark:bg-slate-950 text-white space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <ShoppingCart size={20} /> Current Order
@@ -381,9 +380,9 @@ export default function POSFurniture() {
                   {isCustomerDropdownOpen && (
                     <>
                       <div className="fixed inset-0 z-40" onClick={() => setIsCustomerDropdownOpen(false)} />
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-slate-700 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto py-1">
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-slate-800 dark:bg-slate-900 border border-slate-700 dark:border-slate-800 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto py-1">
                         <div 
-                          className="px-4 py-2.5 hover:bg-slate-700 cursor-pointer text-sm text-white font-medium transition-colors"
+                          className="px-4 py-2.5 hover:bg-slate-700 dark:hover:bg-slate-800 cursor-pointer text-sm text-white font-medium transition-colors"
                           onClick={() => {
                             setSelectedCustomer('Walk-in Customer')
                             setIsCustomerDropdownOpen(false)
@@ -397,7 +396,7 @@ export default function POSFurniture() {
                           .map(c => (
                           <div 
                             key={c.id}
-                            className="px-4 py-2.5 hover:bg-slate-700 cursor-pointer text-sm text-white transition-colors border-t border-slate-700/50"
+                            className="px-4 py-2.5 hover:bg-slate-700 dark:hover:bg-slate-800 cursor-pointer text-sm text-white transition-colors border-t border-slate-700/50 dark:border-slate-800"
                             onClick={() => {
                               setSelectedCustomer(c.name)
                               setIsCustomerDropdownOpen(false)
@@ -441,7 +440,7 @@ export default function POSFurniture() {
           <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
             <AnimatePresence mode="popLayout">
               {cart.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2">
+                <div className="h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 space-y-2">
                   <Armchair size={48} strokeWidth={1} />
                   <p>No furniture selected</p>
                 </div>
@@ -452,23 +451,23 @@ export default function POSFurniture() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="flex items-center justify-between gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100 group"
+                    className="flex items-center justify-between gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 group"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-slate-800 line-clamp-1">{item.name}</span>
-                        <span className="text-[10px] text-slate-400">({item.quantity} pcs)</span>
-                        <span className="text-xs font-bold text-amber-600">= ৳{(item.price * item.quantity).toLocaleString()}</span>
+                        <span className="text-xs font-bold text-slate-800 dark:text-slate-200 line-clamp-1">{item.name}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500">({item.quantity} pcs)</span>
+                        <span className="text-xs font-bold text-amber-600 dark:text-amber-400">= ৳{(item.price * item.quantity).toLocaleString()}</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200">
-                      <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:bg-slate-50 rounded text-slate-500"><Minus size={12} /></button>
-                      <span className="text-[10px] font-bold w-4 text-center">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:bg-slate-50 rounded text-slate-500"><Plus size={12} /></button>
+                    <div className="flex items-center gap-1 bg-white dark:bg-slate-900 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                      <button onClick={() => updateQuantity(item.id, -1)} className="p-1 hover:bg-slate-50 dark:hover:bg-slate-800 rounded text-slate-500 dark:text-slate-400"><Minus size={12} /></button>
+                      <span className="text-[10px] font-bold w-4 text-center dark:text-slate-200">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, 1)} className="p-1 hover:bg-slate-50 dark:hover:bg-slate-800 rounded text-slate-500 dark:text-slate-400"><Plus size={12} /></button>
                     </div>
                     <button 
                       onClick={() => removeFromCart(item.id)} 
-                      className="p-1.5 text-slate-300 hover:text-rose-500 transition-colors"
+                      className="p-1.5 text-slate-300 dark:text-slate-600 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -478,51 +477,50 @@ export default function POSFurniture() {
             </AnimatePresence>
           </div>
 
-          <div className="p-6 bg-slate-50 border-t border-slate-200 space-y-3">
+          <div className="p-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 space-y-3">
             <div className="space-y-2">
-              <div className="flex justify-between text-slate-600 text-xs">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400 text-xs">
                 <span>Subtotal</span>
                 <span>৳{subtotal.toLocaleString()}</span>
               </div>
               
               {/* Discount Section - One Line */}
-              <div className="flex items-center justify-between gap-2 py-1 border-y border-slate-200/50">
+              <div className="flex items-center justify-between gap-2 py-1 border-y border-slate-200/50 dark:border-slate-800">
                 <div className="flex items-center gap-1.5 min-w-fit">
-                  <span className="text-slate-600 text-xs">Disc.</span>
-                  <div className="flex bg-white border border-slate-200 rounded-lg p-0.5">
+                  <span className="text-slate-600 dark:text-slate-400 text-xs">Disc.</span>
+                  <div className="flex bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-0.5">
                     <button 
                       onClick={() => setDiscountType('fixed')}
-                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'fixed' ? "bg-amber-100 text-amber-700" : "text-slate-400")}
+                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'fixed' ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400" : "text-slate-400 dark:text-slate-500")}
                     >৳</button>
                     <button 
                       onClick={() => setDiscountType('percent')}
-                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'percent' ? "bg-amber-100 text-amber-700" : "text-slate-400")}
+                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'percent' ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400" : "text-slate-400 dark:text-slate-500")}
                     >%</button>
                   </div>
                 </div>
                 <input 
                   type="number" 
-                  className="flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-40 p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-right outline-none focus:border-amber-500 dark:text-slate-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
-                  value={Number.isNaN(discount) ? '' : discount}
-                  onFocus={(e) => e.target.select()}
+                  value={discount === 0 ? '' : discount}
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
                 />
               </div>
 
               {/* Delivery Charge */}
               <div className="flex items-center justify-between gap-4">
-                <span className="text-slate-600 text-xs whitespace-nowrap">Delivery Charge</span>
+                <span className="text-slate-600 dark:text-slate-400 text-xs whitespace-nowrap">Delivery Charge</span>
                 <input 
                   type="number" 
-                  className="w-20 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  value={Number.isNaN(deliveryCharge) ? '' : deliveryCharge}
-                  onFocus={(e) => e.target.select()}
+                  className="w-40 p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-right outline-none focus:border-amber-500 dark:text-slate-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  placeholder="0"
+                  value={deliveryCharge === 0 ? '' : deliveryCharge}
                   onChange={(e) => setDeliveryCharge(parseFloat(e.target.value) || 0)}
                 />
               </div>
 
-              <div className="flex justify-between text-sm font-bold text-slate-900 pt-1 border-t border-slate-200">
+              <div className="flex justify-between text-sm font-bold text-slate-900 dark:text-slate-100 pt-1 border-t border-slate-200 dark:border-slate-800">
                 <span>Total</span>
                 <span>৳{total.toLocaleString()}</span>
               </div>
@@ -530,23 +528,23 @@ export default function POSFurniture() {
               {/* Payment Section */}
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-emerald-600 font-bold text-xs">Paid</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold text-xs">Paid</span>
                   <input 
                     type="number" 
-                    className="w-28 p-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-right font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    value={Number.isNaN(paidAmount) ? '' : paidAmount}
-                    onFocus={(e) => e.target.select()}
+                    className="w-40 p-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 rounded-lg text-sm text-right font-bold text-emerald-700 dark:text-emerald-400 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    placeholder="0"
+                    value={paidAmount === 0 ? '' : paidAmount}
                     onChange={(e) => setPaidAmount(parseFloat(e.target.value) || 0)}
                   />
                 </div>
-                <div className="flex justify-between text-rose-600 font-bold text-xs">
+                <div className="flex justify-between text-rose-600 dark:text-rose-400 font-bold text-xs">
                   <span>Due</span>
                   <span>৳{dueAmount.toLocaleString()}</span>
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 pt-1">
-              <button className="py-4 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
+              <button className="py-4 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
                 <Printer size={18} /> A4 Print
               </button>
               <button 
@@ -575,16 +573,16 @@ export default function POSFurniture() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative bg-white rounded-3xl p-8 shadow-2xl max-w-sm w-full text-center"
+              className="relative bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-2xl max-w-sm w-full text-center"
             >
-              <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Check size={40} strokeWidth={3} />
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">Order Successful!</h2>
-              <p className="text-slate-500 mb-8">The furniture stock has been updated and the invoice is ready.</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Order Successful!</h2>
+              <p className="text-slate-500 dark:text-slate-400 mb-8">The furniture stock has been updated and the invoice is ready.</p>
               <button 
                 onClick={() => setIsCheckoutSuccess(false)}
-                className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all"
+                className="w-full py-4 bg-slate-900 dark:bg-slate-800 text-white rounded-2xl font-bold hover:bg-slate-800 dark:hover:bg-slate-700 transition-all"
               >
                 Continue Shopping
               </button>

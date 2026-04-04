@@ -64,8 +64,8 @@ export default function CustomerPage() {
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-display font-bold text-slate-900">Customer Directory</h1>
-            <p className="text-slate-500">Manage your customer relationships and order history.</p>
+            <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-slate-100">Customer Directory</h1>
+            <p className="text-slate-500 dark:text-slate-400">Manage your customer relationships and order history.</p>
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
@@ -77,33 +77,33 @@ export default function CustomerPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{stat.label}</p>
-              <h3 className="text-xl font-bold text-slate-900">{stat.value}</h3>
+            <div key={stat.label} className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">{stat.label}</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">{stat.value}</h3>
             </div>
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="p-4 border-b border-slate-100 flex flex-col md:flex-row gap-4 justify-between">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+          <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col md:flex-row gap-4 justify-between">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
                 placeholder="Search by name, phone or ID..." 
-                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-xl outline-none text-sm"
+                className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl outline-none text-sm dark:text-slate-100"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <div className="flex gap-2">
-              <button className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium text-slate-600">Filter</button>
-              <button className="px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium text-slate-600">Export</button>
+              <button className="px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400">Filter</button>
+              <button className="px-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400">Export</button>
             </div>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+              <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
                 <tr>
                   <th className="px-6 py-4 font-semibold">Customer</th>
                   <th className="px-6 py-4 font-semibold">Contact</th>
@@ -113,9 +113,9 @@ export default function CustomerPage() {
                   <th className="px-6 py-4 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filteredCustomers.map((cus) => (
-                  <tr key={cus.id} className="hover:bg-slate-50 transition-colors">
+                  <tr key={cus.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {cus.photo ? (
@@ -123,37 +123,37 @@ export default function CustomerPage() {
                             <Image src={cus.photo} alt={cus.name} fill className="object-cover" />
                           </div>
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold">
+                          <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-700 dark:text-amber-400 font-bold">
                             {cus.name.charAt(0)}
                           </div>
                         )}
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-slate-900">{cus.name}</span>
-                          <span className="text-[10px] text-slate-400 font-mono">{cus.id.slice(-6).toUpperCase()}</span>
+                          <span className="text-sm font-bold text-slate-900 dark:text-slate-100">{cus.name}</span>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">{cus.id.slice(-6).toUpperCase()}</span>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
-                        <span className="text-xs text-slate-600 flex items-center gap-1"><Phone size={12} /> {cus.phone}</span>
-                        <span className="text-xs text-slate-400 flex items-center gap-1 line-clamp-1"><MapPin size={12} /> {cus.address}</span>
+                        <span className="text-xs text-slate-600 dark:text-slate-400 flex items-center gap-1"><Phone size={12} /> {cus.phone}</span>
+                        <span className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1 line-clamp-1"><MapPin size={12} /> {cus.address}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={cn(
                         "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase",
-                        cus.type === 'Premium' ? "bg-purple-100 text-purple-700" :
-                        cus.type === 'Wholesale' ? "bg-blue-100 text-blue-700" :
-                        "bg-slate-100 text-slate-600"
+                        cus.type === 'Premium' ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400" :
+                        cus.type === 'Wholesale' ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400" :
+                        "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                       )}>
                         {cus.type || 'Regular'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-600 font-medium">{cus.totalOrders || 0} Orders</td>
+                    <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">{cus.totalOrders || 0} Orders</td>
                     <td className="px-6 py-4">
                       <span className={cn(
                         "text-sm font-bold",
-                        (cus.totalDue || 0) > 0 ? "text-rose-500" : "text-emerald-600"
+                        (cus.totalDue || 0) > 0 ? "text-rose-500 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"
                       )}>
                         {(cus.totalDue || 0) > 0 ? `৳${cus.totalDue.toLocaleString()}` : 'No Due'}
                       </span>
@@ -162,20 +162,20 @@ export default function CustomerPage() {
                       <div className="flex items-center justify-end gap-2">
                         <Link 
                           href={`/customer-statement?id=${cus.id}`}
-                          className="p-2 hover:bg-amber-50 rounded-lg text-slate-400 hover:text-amber-600 transition-colors"
+                          className="p-2 hover:bg-amber-50 dark:hover:bg-amber-900/30 rounded-lg text-slate-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                           title="View Statement"
                         >
                           <FileText size={18} />
                         </Link>
-                        <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 transition-colors"><MessageSquare size={18} /></button>
-                        <button className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 transition-colors"><MoreVertical size={18} /></button>
+                        <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 transition-colors"><MessageSquare size={18} /></button>
+                        <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 transition-colors"><MoreVertical size={18} /></button>
                       </div>
                     </td>
                   </tr>
                 ))}
                 {filteredCustomers.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400 dark:text-slate-500">
                       No customers found matching your search.
                     </td>
                   </tr>
