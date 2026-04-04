@@ -25,19 +25,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className="bg-slate-50 text-slate-900 antialiased" suppressHydrationWarning>
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function() {
-            var originalFetch = window.fetch;
-            Object.defineProperty(window, 'fetch', {
-              get: function() { return originalFetch; },
-              set: function(v) { 
-                console.warn('Attempt to overwrite window.fetch detected:', v);
-                // We don't actually set it to avoid the TypeError if it's already a getter
-              },
-              configurable: true
-            });
-          })();
-        ` }} />
         {children}
       </body>
     </html>

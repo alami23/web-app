@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import Image from 'next/image'
-import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Filter, Pencil, Check, X, Camera, Upload, UserPlus, RotateCcw } from 'lucide-react'
+import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Filter, Pencil, Check, X, Camera, Upload, UserPlus, RotateCcw, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn, safeParse } from '@/lib/utils'
 import AddCustomerModal from '@/components/AddCustomerModal'
@@ -65,6 +65,8 @@ export default function POSWood() {
 
   const [customers, setCustomers] = useState<any[]>([])
   const [isAddingCustomer, setIsAddingCustomer] = useState(false)
+  const [isCustomerDropdownOpen, setIsCustomerDropdownOpen] = useState(false)
+  const [customerSearchTerm, setCustomerSearchTerm] = useState('')
   const [selectedCustomer, setSelectedCustomer] = useState('Walk-in Customer')
   const [isCheckoutSuccess, setIsCheckoutSuccess] = useState(false)
   const [discount, setDiscount] = useState(0)
@@ -414,40 +416,76 @@ export default function POSWood() {
               </h2>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
-                <input 
-                  type="text"
-                  placeholder="Search customer..."
-                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-amber-500 transition-colors"
-                  onChange={(e) => {
-                    const term = e.target.value.toLowerCase()
-                    if (term === '') {
-                      setSelectedCustomer('Walk-in Customer')
-                    } else {
-                      const found = customers.find(c => 
-                        c.name.toLowerCase().includes(term) || 
-                        c.phone.includes(term)
-                      )
-                      if (found) setSelectedCustomer(found.name)
-                    }
-                  }}
-                />
-              </div>
               <div className="flex items-center gap-2">
-                <select 
-                  className="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors"
-                  value={selectedCustomer}
-                  onChange={(e) => setSelectedCustomer(e.target.value)}
-                >
-                  <option value="Walk-in Customer">Walk-in Customer</option>
-                  {customers.map(c => (
-                    <option key={c.id} value={c.name}>{c.name} ({c.phone})</option>
-                  ))}
-                </select>
+                <div className="relative flex-1">
+                  <div 
+                    className="flex items-center w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 relative z-30"
+                  >
+                    <Search className="text-slate-400 mr-2 shrink-0" size={14} />
+                    <input 
+                      type="text"
+                      placeholder="Search or Select Customer..."
+                      className="bg-transparent outline-none flex-1 text-sm w-full min-w-0"
+                      value={isCustomerDropdownOpen ? customerSearchTerm : selectedCustomer}
+                      onChange={(e) => {
+                        setCustomerSearchTerm(e.target.value)
+                        setIsCustomerDropdownOpen(true)
+                      }}
+                      onFocus={() => {
+                        setIsCustomerDropdownOpen(true)
+                        setCustomerSearchTerm('')
+                      }}
+                    />
+                    <button 
+                      onClick={() => setIsCustomerDropdownOpen(!isCustomerDropdownOpen)}
+                      className="p-1 text-slate-400 hover:text-slate-600 shrink-0"
+                    >
+                      <ChevronDown size={14} />
+                    </button>
+                  </div>
+
+                  {isCustomerDropdownOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setIsCustomerDropdownOpen(false)} />
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto py-1">
+                        <div 
+                          className="px-4 py-2.5 hover:bg-amber-50 cursor-pointer text-sm text-slate-700 font-medium transition-colors"
+                          onClick={() => {
+                            setSelectedCustomer('Walk-in Customer')
+                            setIsCustomerDropdownOpen(false)
+                            setCustomerSearchTerm('')
+                          }}
+                        >
+                          Walk-in Customer
+                        </div>
+                        {customers
+                          .filter(c => c.name.toLowerCase().includes(customerSearchTerm.toLowerCase()) || c.phone.includes(customerSearchTerm))
+                          .map(c => (
+                          <div 
+                            key={c.id}
+                            className="px-4 py-2.5 hover:bg-amber-50 cursor-pointer text-sm text-slate-700 transition-colors border-t border-slate-50"
+                            onClick={() => {
+                              setSelectedCustomer(c.name)
+                              setIsCustomerDropdownOpen(false)
+                              setCustomerSearchTerm('')
+                            }}
+                          >
+                            <div className="font-medium">{c.name}</div>
+                            <div className="text-xs text-slate-500">{c.phone}</div>
+                          </div>
+                        ))}
+                        {customers.filter(c => c.name.toLowerCase().includes(customerSearchTerm.toLowerCase()) || c.phone.includes(customerSearchTerm)).length === 0 && (
+                          <div className="px-4 py-3 text-sm text-slate-500 text-center">
+                            No customers found
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
                 <button 
                   onClick={() => setIsAddingCustomer(true)}
-                  className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
+                  className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center shrink-0"
                   title="Add New Customer"
                 >
                   <UserPlus size={18} />
@@ -457,7 +495,7 @@ export default function POSWood() {
                     setCart([])
                     setSelectedCustomer('Walk-in Customer')
                   }}
-                  className="p-2.5 bg-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center"
+                  className="p-2.5 bg-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center shrink-0"
                   title="Reset Order"
                 >
                   <RotateCcw size={18} />
