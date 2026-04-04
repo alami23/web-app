@@ -104,8 +104,6 @@ export default function POSWood() {
     }
 
     setCart([...cart, { ...product, quantity: 1 }])
-    setEditingId(null)
-    setEditData(null)
   }
 
   const handleCheckout = () => {
@@ -211,22 +209,22 @@ export default function POSWood() {
       <div className="flex flex-col lg:flex-row gap-3 h-[calc(100vh-120px)] overflow-hidden">
         {/* Left: Product Selection */}
         <div className="flex-1 flex flex-col gap-3 min-w-0 overflow-hidden">
-          <div className="flex flex-col md:flex-row gap-4 items-center sticky top-0 z-20 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md py-4 -mt-4 mb-2">
+          <div className="flex flex-col md:flex-row gap-4 items-center sticky top-0 z-20 bg-slate-50/80 backdrop-blur-md py-4 -mt-4 mb-2">
             <div className="relative flex-1 w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
                 placeholder="Search wood items..." 
-                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div className="flex gap-3 w-full md:w-auto">
               <div className="flex flex-col gap-1 flex-1 md:w-48">
-                <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">Category</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Category</label>
                 <select 
-                  className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
+                  className="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                   value={selectedCategory}
                   onChange={(e) => {
                     setSelectedCategory(e.target.value)
@@ -241,10 +239,10 @@ export default function POSWood() {
                 </select>
               </div>
               <div className="flex flex-col gap-1 flex-1 md:w-48">
-                <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider ml-1">Car No</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Car No</label>
                 <select 
                   disabled={selectedCategory === 'All'}
-                  className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all disabled:bg-slate-50 dark:disabled:bg-slate-950 disabled:text-slate-400"
+                  className="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all disabled:bg-slate-50 disabled:text-slate-400"
                   value={selectedSubCategory}
                   onChange={(e) => {
                     setSelectedSubCategory(e.target.value)
@@ -264,9 +262,9 @@ export default function POSWood() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-auto pr-2 custom-scrollbar bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex-1 overflow-auto pr-2 custom-scrollbar bg-white rounded-3xl border border-slate-200 shadow-sm">
             <table className="w-full text-left border-collapse table-auto">
-              <thead className="sticky top-0 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider z-10">
+              <thead className="sticky top-0 bg-slate-50 text-slate-500 text-xs uppercase tracking-wider z-10">
                 <tr>
                   <th className="px-3 py-2 font-semibold w-12 text-center">No</th>
                   <th className="px-1 py-2 font-semibold w-14">Car</th>
@@ -279,62 +277,62 @@ export default function POSWood() {
                   <th className="px-1 py-2 font-semibold text-center w-28">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+              <tbody className="divide-y divide-slate-100">
                 {filteredProducts.map((product, index) => (
                   <tr 
                     key={product.id} 
                     className={cn(
                       "transition-colors group",
-                      editingId === product.id ? "bg-amber-50 dark:bg-amber-900/20" : "hover:bg-amber-50/30 dark:hover:bg-amber-900/10"
+                      editingId === product.id ? "bg-amber-50" : "hover:bg-amber-50/30"
                     )}
                   >
-                    <td className="px-3 py-2 text-[10px] font-medium text-slate-400 dark:text-slate-500 text-center">{index + 1}</td>
-                    <td className="px-1 py-2 text-xs text-slate-600 dark:text-slate-400 font-medium">
+                    <td className="px-3 py-2 text-[10px] font-medium text-slate-400 text-center">{index + 1}</td>
+                    <td className="px-1 py-2 text-xs text-slate-600 font-medium">
                       {editingId === product.id ? (
                         <input 
                           type="text" 
-                          className="w-10 p-0.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded outline-none focus:border-amber-500 text-[10px] dark:text-slate-100" 
+                          className="w-10 p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px]" 
                           value={editData.carNo}
                           onChange={(e) => handleEditChange('carNo', e.target.value)}
                         />
                       ) : product.carNo}
                     </td>
-                    <td className="px-2 py-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                    <td className="px-2 py-2 text-xs font-bold text-emerald-600">
                       {editingId === product.id ? (
                         <input 
                           type="text" 
-                          className="w-full p-0.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded outline-none focus:border-amber-500 text-[10px] dark:text-slate-100" 
+                          className="w-full p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px]" 
                           value={editData.subCategory}
                           onChange={(e) => handleEditChange('subCategory', e.target.value)}
                         />
                       ) : product.subCategory}
                     </td>
-                    <td className="px-3 py-2 text-xs text-slate-600 dark:text-slate-400 font-medium">
+                    <td className="px-3 py-2 text-xs text-slate-600 font-medium">
                       {editingId === product.id ? (
                         <input 
                           type="number" 
-                          className="w-14 p-0.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded outline-none focus:border-amber-500 text-[10px] dark:text-slate-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                          className="w-14 p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                           value={Number.isNaN(editData.width) ? '' : editData.width}
                           onChange={(e) => handleEditChange('width', parseFloat(e.target.value))}
                         />
                       ) : `${product.width}"`}
                     </td>
-                    <td className="px-3 py-2 text-xs text-slate-600 dark:text-slate-400 font-medium">
+                    <td className="px-3 py-2 text-xs text-slate-600 font-medium">
                       {editingId === product.id ? (
                         <input 
                           type="number" 
-                          className="w-14 p-0.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded outline-none focus:border-amber-500 text-[10px] dark:text-slate-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                          className="w-14 p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                           value={Number.isNaN(editData.length) ? '' : editData.length}
                           onChange={(e) => handleEditChange('length', parseFloat(e.target.value))}
                         />
                       ) : `${product.length}'`}
                     </td>
-                    <td className="px-3 py-2 text-xs text-slate-600 dark:text-slate-400 font-medium">
+                    <td className="px-3 py-2 text-xs text-slate-600 font-medium">
                       {editingId === product.id ? (
                         <input 
                           type="number" 
                           readOnly
-                          className="w-24 p-0.5 border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 rounded outline-none text-slate-500 dark:text-slate-400 cursor-not-allowed text-[10px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                          className="w-24 p-0.5 border border-slate-200 bg-slate-50 rounded outline-none text-slate-500 cursor-not-allowed text-[10px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                           value={Number.isNaN(editData.cft) ? '' : editData.cft.toFixed(5)}
                         />
                       ) : (
@@ -345,19 +343,19 @@ export default function POSWood() {
                       {editingId === product.id ? (
                         <input 
                           type="text" 
-                          className="w-full p-0.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded outline-none focus:border-amber-500 text-[10px] dark:text-slate-100" 
+                          className="w-full p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px]" 
                           value={editData.description}
                           onChange={(e) => handleEditChange('description', e.target.value)}
                         />
                       ) : (
-                        <span className="text-[10px] text-slate-600 dark:text-slate-400 line-clamp-1">{product.description}</span>
+                        <span className="text-[10px] text-slate-600 line-clamp-1">{product.description}</span>
                       )}
                     </td>
-                    <td className="px-1 py-2 text-xs font-bold text-amber-600 dark:text-amber-400 text-center">
+                    <td className="px-1 py-2 text-xs font-bold text-amber-600 text-center">
                       {editingId === product.id ? (
                         <input 
                           type="number" 
-                          className="w-20 p-1 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded outline-none focus:border-amber-500 text-xs text-center font-bold dark:text-slate-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                          className="w-20 p-1 border border-slate-300 rounded outline-none focus:border-amber-500 text-xs text-center font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
                           value={Number.isNaN(editData.price) ? '' : editData.price}
                           onChange={(e) => handleEditChange('price', parseInt(e.target.value))}
                         />
@@ -369,14 +367,14 @@ export default function POSWood() {
                           <>
                             <button 
                               onClick={saveEditing}
-                              className="p-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl hover:bg-emerald-600 dark:hover:bg-emerald-500 hover:text-white transition-all shadow-sm"
+                              className="p-2 bg-emerald-100 text-emerald-600 rounded-xl hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
                               title="Save Changes"
                             >
                               <Check size={18} />
                             </button>
                             <button 
                               onClick={cancelEditing}
-                              className="p-2 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 rounded-xl hover:bg-rose-600 dark:hover:bg-rose-500 hover:text-white transition-all shadow-sm"
+                              className="p-2 bg-rose-100 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white transition-all shadow-sm"
                               title="Cancel"
                             >
                               <X size={18} />
@@ -386,14 +384,14 @@ export default function POSWood() {
                           <>
                             <button 
                               onClick={() => startEditing(product)}
-                              className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shadow-sm"
+                              className="p-2 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 transition-all shadow-sm"
                               title="Edit Product"
                             >
                               <Pencil size={18} />
                             </button>
                             <button 
                               onClick={() => addToCart(product)}
-                              className="p-2 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl hover:bg-amber-600 dark:hover:bg-amber-500 hover:text-white transition-all shadow-sm group-hover:shadow-md"
+                              className="p-2 bg-amber-100 text-amber-600 rounded-xl hover:bg-amber-600 hover:text-white transition-all shadow-sm group-hover:shadow-md"
                               title="Add to Cart"
                             >
                               <Plus size={18} />
@@ -407,7 +405,7 @@ export default function POSWood() {
               </tbody>
             </table>
             {filteredProducts.length === 0 && (
-              <div className="p-12 text-center text-slate-400 dark:text-slate-500">
+              <div className="p-12 text-center text-slate-400">
                 <Search size={48} className="mx-auto mb-4 opacity-20" />
                 <p>No wood items found matching your search.</p>
               </div>
@@ -416,10 +414,10 @@ export default function POSWood() {
         </div>
 
         {/* Right: Cart/Checkout */}
-        <div className="w-full lg:w-[320px] xl:w-[360px] bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col overflow-hidden">
-          <div className="p-6 border-b border-slate-100 dark:border-slate-800">
+        <div className="w-full lg:w-[320px] xl:w-[360px] bg-white rounded-3xl border border-slate-200 shadow-xl flex flex-col overflow-hidden">
+          <div className="p-6 border-b border-slate-100">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                 <ShoppingCart size={20} /> Current Order
               </h2>
             </div>
@@ -427,13 +425,13 @@ export default function POSWood() {
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
                   <div 
-                    className="flex items-center w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 relative z-30"
+                    className="flex items-center w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 relative z-30"
                   >
                     <Search className="text-slate-400 mr-2 shrink-0" size={14} />
                     <input 
                       type="text"
                       placeholder="Search or Select Customer..."
-                      className="bg-transparent outline-none flex-1 text-sm w-full min-w-0 dark:text-slate-100"
+                      className="bg-transparent outline-none flex-1 text-sm w-full min-w-0"
                       value={isCustomerDropdownOpen ? customerSearchTerm : selectedCustomer}
                       onChange={(e) => {
                         setCustomerSearchTerm(e.target.value)
@@ -446,7 +444,7 @@ export default function POSWood() {
                     />
                     <button 
                       onClick={() => setIsCustomerDropdownOpen(!isCustomerDropdownOpen)}
-                      className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 shrink-0"
+                      className="p-1 text-slate-400 hover:text-slate-600 shrink-0"
                     >
                       <ChevronDown size={14} />
                     </button>
@@ -455,9 +453,9 @@ export default function POSWood() {
                   {isCustomerDropdownOpen && (
                     <>
                       <div className="fixed inset-0 z-40" onClick={() => setIsCustomerDropdownOpen(false)} />
-                      <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto py-1">
+                      <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto py-1">
                         <div 
-                          className="px-4 py-2.5 hover:bg-amber-50 dark:hover:bg-amber-900/20 cursor-pointer text-sm text-slate-700 dark:text-slate-200 font-medium transition-colors"
+                          className="px-4 py-2.5 hover:bg-amber-50 cursor-pointer text-sm text-slate-700 font-medium transition-colors"
                           onClick={() => {
                             setSelectedCustomer('Walk-in Customer')
                             setIsCustomerDropdownOpen(false)
@@ -471,7 +469,7 @@ export default function POSWood() {
                           .map(c => (
                           <div 
                             key={c.id}
-                            className="px-4 py-2.5 hover:bg-amber-50 dark:hover:bg-amber-900/20 cursor-pointer text-sm text-slate-700 dark:text-slate-200 transition-colors border-t border-slate-50 dark:border-slate-700"
+                            className="px-4 py-2.5 hover:bg-amber-50 cursor-pointer text-sm text-slate-700 transition-colors border-t border-slate-50"
                             onClick={() => {
                               setSelectedCustomer(c.name)
                               setIsCustomerDropdownOpen(false)
@@ -479,11 +477,11 @@ export default function POSWood() {
                             }}
                           >
                             <div className="font-medium">{c.name}</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400">{c.phone}</div>
+                            <div className="text-xs text-slate-500">{c.phone}</div>
                           </div>
                         ))}
                         {customers.filter(c => c.name.toLowerCase().includes(customerSearchTerm.toLowerCase()) || c.phone.includes(customerSearchTerm)).length === 0 && (
-                          <div className="px-4 py-3 text-sm text-slate-500 dark:text-slate-400 text-center">
+                          <div className="px-4 py-3 text-sm text-slate-500 text-center">
                             No customers found
                           </div>
                         )}
@@ -503,7 +501,7 @@ export default function POSWood() {
                     setCart([])
                     setSelectedCustomer('Walk-in Customer')
                   }}
-                  className="p-2.5 bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 hover:bg-rose-600 dark:hover:bg-rose-500 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center shrink-0"
+                  className="p-2.5 bg-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center shrink-0"
                   title="Reset Order"
                 >
                   <RotateCcw size={18} />
@@ -523,7 +521,7 @@ export default function POSWood() {
           <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
             <AnimatePresence mode="popLayout">
               {cart.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 space-y-2">
+                <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2">
                   <ShoppingCart size={48} strokeWidth={1} />
                   <p>Your cart is empty</p>
                 </div>
@@ -534,18 +532,18 @@ export default function POSWood() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="flex items-center justify-between gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 group"
+                    className="flex items-center justify-between gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100 group"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">{item.subCategory}</span>
-                        <span className="text-[10px] text-slate-400 dark:text-slate-500">({item.width}*{item.length})</span>
-                        <span className="text-xs font-bold text-slate-800 dark:text-slate-200">= ৳{(item.price * item.cft).toFixed(2)}</span>
+                        <span className="text-xs font-bold text-emerald-600">{item.subCategory}</span>
+                        <span className="text-[10px] text-slate-400">({item.width}*{item.length})</span>
+                        <span className="text-xs font-bold text-slate-800">= ৳{(item.price * item.cft).toFixed(2)}</span>
                       </div>
                     </div>
                     <button 
                       onClick={() => removeFromCart(item.id)} 
-                      className="p-1.5 text-slate-300 dark:text-slate-600 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-all"
+                      className="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -555,31 +553,31 @@ export default function POSWood() {
             </AnimatePresence>
           </div>
 
-          <div className="p-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 space-y-3">
+          <div className="p-6 bg-slate-50 border-t border-slate-200 space-y-3">
             <div className="space-y-2">
-              <div className="flex justify-between text-slate-600 dark:text-slate-400 text-xs">
+              <div className="flex justify-between text-slate-600 text-xs">
                 <span>Subtotal</span>
                 <span>৳{subtotal.toFixed(2)}</span>
               </div>
               
               {/* Discount Section - One Line */}
-              <div className="flex items-center justify-between gap-2 py-1 border-y border-slate-200/50 dark:border-slate-800">
+              <div className="flex items-center justify-between gap-2 py-1 border-y border-slate-200/50">
                 <div className="flex items-center gap-1.5 min-w-fit">
-                  <span className="text-slate-600 dark:text-slate-400 text-xs">Disc.</span>
-                  <div className="flex bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-0.5">
+                  <span className="text-slate-600 text-xs">Disc.</span>
+                  <div className="flex bg-white border border-slate-200 rounded-lg p-0.5">
                     <button 
                       onClick={() => setDiscountType('fixed')}
-                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'fixed' ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400" : "text-slate-400 dark:text-slate-500")}
+                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'fixed' ? "bg-amber-100 text-amber-700" : "text-slate-400")}
                     >৳</button>
                     <button 
                       onClick={() => setDiscountType('percent')}
-                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'percent' ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400" : "text-slate-400 dark:text-slate-500")}
+                      className={cn("px-1.5 py-0.5 text-[9px] font-bold rounded", discountType === 'percent' ? "bg-amber-100 text-amber-700" : "text-slate-400")}
                     >%</button>
                   </div>
                 </div>
                 <input 
                   type="number" 
-                  className="w-40 p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-right outline-none focus:border-amber-500 dark:text-slate-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-32 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
                   value={discount === 0 ? '' : discount}
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
@@ -588,17 +586,17 @@ export default function POSWood() {
 
               {/* Delivery Charge */}
               <div className="flex items-center justify-between gap-4">
-                <span className="text-slate-600 dark:text-slate-400 text-xs whitespace-nowrap">Delivery</span>
+                <span className="text-slate-600 text-xs whitespace-nowrap">Delivery</span>
                 <input 
                   type="number" 
-                  className="w-40 p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm text-right outline-none focus:border-amber-500 dark:text-slate-100 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-32 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
                   value={deliveryCharge === 0 ? '' : deliveryCharge}
                   onChange={(e) => setDeliveryCharge(parseFloat(e.target.value) || 0)}
                 />
               </div>
 
-              <div className="flex justify-between text-sm font-bold text-slate-900 dark:text-slate-100 pt-1 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex justify-between text-sm font-bold text-slate-900 pt-1 border-t border-slate-200">
                 <span>Total</span>
                 <span>৳{total.toFixed(2)}</span>
               </div>
@@ -606,23 +604,23 @@ export default function POSWood() {
               {/* Payment Section */}
               <div className="space-y-1.5 pt-1">
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-emerald-600 dark:text-emerald-400 font-bold text-xs">Paid</span>
+                  <span className="text-emerald-600 font-bold text-xs">Paid</span>
                   <input 
                     type="number" 
-                    className="w-40 p-2 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 rounded-lg text-sm text-right font-bold text-emerald-700 dark:text-emerald-400 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="w-32 p-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-right font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     placeholder="0"
                     value={paidAmount === 0 ? '' : paidAmount}
                     onChange={(e) => setPaidAmount(parseFloat(e.target.value) || 0)}
                   />
                 </div>
-                <div className="flex justify-between text-rose-600 dark:text-rose-400 font-bold text-xs">
+                <div className="flex justify-between text-rose-600 font-bold text-xs">
                   <span>Due</span>
                   <span>৳{dueAmount.toFixed(2)}</span>
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 pt-1">
-              <button className="py-3 px-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+              <button className="py-3 px-4 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
                 <Printer size={18} /> Bill
               </button>
               <button 
@@ -643,16 +641,16 @@ export default function POSWood() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden p-8 text-center"
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden p-8 text-center"
               >
-                <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Check size={40} />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">Sale Complete!</h3>
-                <p className="text-slate-500 dark:text-slate-400 mb-8">The wood inventory has been automatically updated and the invoice is ready.</p>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">Sale Complete!</h3>
+                <p className="text-slate-500 mb-8">The wood inventory has been automatically updated and the invoice is ready.</p>
                 <button 
                   onClick={() => setIsCheckoutSuccess(false)}
-                  className="w-full py-4 bg-slate-900 dark:bg-slate-800 text-white font-bold rounded-2xl hover:bg-slate-800 dark:hover:bg-slate-700 transition-all shadow-lg shadow-slate-900/20"
+                  className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
                 >
                   Continue
                 </button>

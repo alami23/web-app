@@ -61,26 +61,26 @@ export default function Dashboard() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-slate-100">Dashboard Overview</h1>
-          <p className="text-slate-500 dark:text-slate-400">Welcome back, here&apos;s what&apos;s happening with your furniture business today.</p>
+          <h1 className="text-2xl font-display font-bold text-slate-900">Dashboard Overview</h1>
+          <p className="text-slate-500">Welcome back, here&apos;s what&apos;s happening with your furniture business today.</p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat) => (
-            <div key={stat.label} className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow group">
+            <div key={stat.label} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group">
               <div className="flex items-start justify-between">
                 <div className={stat.color + " p-3 rounded-xl text-white shadow-lg shadow-current/20"}>
                   <stat.icon size={24} />
                 </div>
-                <div className={`flex items-center gap-1 text-sm font-medium ${stat.trend === 'up' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                <div className={`flex items-center gap-1 text-sm font-medium ${stat.trend === 'up' ? 'text-emerald-600' : 'text-rose-600'}`}>
                   {stat.trend === 'up' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                   {stat.change}
                 </div>
               </div>
               <div className="mt-4">
-                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">{stat.label}</p>
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">{stat.value}</h3>
+                <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
+                <h3 className="text-2xl font-bold text-slate-900 mt-1">{stat.value}</h3>
               </div>
             </div>
           ))}
@@ -89,10 +89,10 @@ export default function Dashboard() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Revenue Chart */}
-          <div className="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-bold text-slate-800 dark:text-slate-100">Monthly Revenue & Profit</h3>
-              <select className="bg-slate-50 dark:bg-slate-800 border-none text-sm font-medium text-slate-600 dark:text-slate-400 rounded-lg px-3 py-1.5 outline-none">
+              <h3 className="font-bold text-slate-800">Monthly Revenue & Profit</h3>
+              <select className="bg-slate-50 border-none text-sm font-medium text-slate-600 rounded-lg px-3 py-1.5 outline-none">
                 <option>Last 6 Months</option>
                 <option>Last Year</option>
               </select>
@@ -106,18 +106,11 @@ export default function Dashboard() {
                       <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" className="opacity-50 dark:opacity-10" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
                   <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
                   <Tooltip 
-                    contentStyle={{ 
-                      borderRadius: '12px', 
-                      border: 'none', 
-                      boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                      backgroundColor: 'var(--tw-colors-slate-900)',
-                      color: 'white'
-                    }}
-                    itemStyle={{ color: 'white' }}
+                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                   />
                   <Area type="monotone" dataKey="revenue" stroke="#f59e0b" strokeWidth={3} fillOpacity={1} fill="url(#colorRev)" />
                   <Area type="monotone" dataKey="profit" stroke="#10b981" strokeWidth={3} fill="transparent" />
@@ -127,8 +120,8 @@ export default function Dashboard() {
           </div>
 
           {/* Category Chart */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-            <h3 className="font-bold text-slate-800 dark:text-slate-100 mb-6">Sales by Category</h3>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h3 className="font-bold text-slate-800 mb-6">Sales by Category</h3>
             <div className="h-[250px] w-full flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -154,9 +147,9 @@ export default function Dashboard() {
                 <div key={item.name} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                    <span className="text-sm text-slate-600 dark:text-slate-400">{item.name}</span>
+                    <span className="text-sm text-slate-600">{item.name}</span>
                   </div>
-                  <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{item.value} units</span>
+                  <span className="text-sm font-bold text-slate-800">{item.value} units</span>
                 </div>
               ))}
             </div>
@@ -166,14 +159,14 @@ export default function Dashboard() {
         {/* Bottom Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Invoices */}
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <h3 className="font-bold text-slate-800 dark:text-slate-100">Recent Invoices</h3>
-              <button className="text-amber-600 dark:text-amber-400 text-sm font-semibold hover:underline">View All</button>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="font-bold text-slate-800">Recent Invoices</h3>
+              <button className="text-amber-600 text-sm font-semibold hover:underline">View All</button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+                <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                   <tr>
                     <th className="px-6 py-3 font-semibold">Invoice ID</th>
                     <th className="px-6 py-3 font-semibold">Customer</th>
@@ -181,18 +174,18 @@ export default function Dashboard() {
                     <th className="px-6 py-3 font-semibold">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody className="divide-y divide-slate-100">
                   {recentInvoices.map((inv) => (
-                    <tr key={inv.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
-                      <td className="px-6 py-4 text-sm font-medium text-slate-900 dark:text-slate-100">{inv.id}</td>
-                      <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{inv.customer}</td>
-                      <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-slate-100">{inv.amount}</td>
+                    <tr key={inv.id} className="hover:bg-slate-50 transition-colors group">
+                      <td className="px-6 py-4 text-sm font-medium text-slate-900">{inv.id}</td>
+                      <td className="px-6 py-4 text-sm text-slate-600">{inv.customer}</td>
+                      <td className="px-6 py-4 text-sm font-bold text-slate-900">{inv.amount}</td>
                       <td className="px-6 py-4">
                         <span className={cn(
                           "px-2.5 py-1 rounded-full text-xs font-semibold",
-                          inv.status === 'Paid' ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" :
-                          inv.status === 'Pending' ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" :
-                          "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400"
+                          inv.status === 'Paid' ? "bg-emerald-100 text-emerald-700" :
+                          inv.status === 'Pending' ? "bg-amber-100 text-amber-700" :
+                          "bg-rose-100 text-rose-700"
                         )}>
                           {inv.status}
                         </span>
@@ -205,10 +198,10 @@ export default function Dashboard() {
           </div>
 
           {/* Stock Alerts */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-bold text-slate-800 dark:text-slate-100">Low Stock Alerts</h3>
-              <div className="bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 px-2 py-1 rounded text-xs font-bold">4 Items</div>
+              <h3 className="font-bold text-slate-800">Low Stock Alerts</h3>
+              <div className="bg-rose-100 text-rose-700 px-2 py-1 rounded text-xs font-bold">4 Items</div>
             </div>
             <div className="space-y-4">
               {[
@@ -219,10 +212,10 @@ export default function Dashboard() {
               ].map((item) => (
                 <div key={item.name} className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="font-medium text-slate-700 dark:text-slate-200">{item.name}</span>
-                    <span className="text-slate-500 dark:text-slate-400">{item.stock} / {item.min}</span>
+                    <span className="font-medium text-slate-700">{item.name}</span>
+                    <span className="text-slate-500">{item.stock} / {item.min}</span>
                   </div>
-                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${item.progress}%` }}
@@ -232,7 +225,7 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            <button className="w-full mt-6 py-3 bg-slate-900 dark:bg-slate-800 text-white rounded-xl font-semibold hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
+            <button className="w-full mt-6 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
               Generate Purchase Orders <ArrowUpRight size={18} />
             </button>
           </div>

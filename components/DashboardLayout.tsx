@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
-import { useTheme } from 'next-themes'
 import { 
   LayoutDashboard, 
   Trees, 
@@ -28,9 +27,7 @@ import {
   Bell,
   User,
   Box,
-  ShoppingBag,
-  Sun,
-  Moon
+  ShoppingBag
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -72,12 +69,9 @@ const menuItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
   const pathname = usePathname()
 
   useEffect(() => {
-    setMounted(true)
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024)
       if (window.innerWidth < 1024) setIsSidebarOpen(false)
@@ -111,15 +105,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           x: isMobile && !isSidebarOpen ? -280 : 0
         }}
         className={cn(
-          "fixed lg:relative z-50 h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col shadow-xl lg:shadow-none",
+          "fixed lg:relative z-50 h-screen bg-white border-r border-slate-200 overflow-hidden flex flex-col shadow-xl lg:shadow-none",
           !isSidebarOpen && !isMobile && "lg:w-0 border-none"
         )}
       >
-        <div className="p-6 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800">
+        <div className="p-6 flex items-center gap-3 border-b border-slate-100">
           <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-amber-600/20">
             <Armchair size={24} />
           </div>
-          <span className="font-display font-bold text-xl tracking-tight text-slate-800 dark:text-slate-100 whitespace-nowrap">
+          <span className="font-display font-bold text-xl tracking-tight text-slate-800 whitespace-nowrap">
             FurniTrack
           </span>
         </div>
@@ -136,13 +130,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   className={cn(
                     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
                     isActive 
-                      ? "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 font-medium" 
-                      : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-100"
+                      ? "bg-amber-50 text-amber-700 font-medium" 
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                   )}
                 >
                   <item.icon size={20} className={cn(
                     "transition-colors",
-                    isActive ? "text-amber-600" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300"
+                    isActive ? "text-amber-600" : "text-slate-400 group-hover:text-slate-600"
                   )} />
                   <span className="whitespace-nowrap flex-1">{item.name}</span>
                   {item.subItems && (
@@ -188,59 +182,51 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
 
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800">
-          <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-700 dark:text-amber-400 font-bold">
+        <div className="p-4 border-t border-slate-100">
+          <div className="bg-slate-50 rounded-2xl p-4 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold">
               JD
             </div>
             <div className="flex-1 overflow-hidden">
-              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">John Doe</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Admin Account</p>
+              <p className="text-sm font-semibold text-slate-900 truncate">John Doe</p>
+              <p className="text-xs text-slate-500 truncate">Admin Account</p>
             </div>
           </div>
         </div>
       </motion.aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 bg-slate-50/50 dark:bg-slate-950 max-w-full overflow-x-hidden">
+      <main className="flex-1 flex flex-col min-w-0 bg-slate-50/50 max-w-full overflow-x-hidden">
         {/* Top Navbar */}
-        <header className="h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30">
+        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 transition-colors"
+              className="p-2 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors"
             >
               {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-400 w-64">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-full text-slate-400 w-64">
               <Search size={16} />
               <input 
                 type="text" 
                 placeholder="Search anything..." 
-                className="bg-transparent border-none outline-none text-sm text-slate-900 dark:text-slate-100 w-full"
+                className="bg-transparent border-none outline-none text-sm text-slate-900 w-full"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-2 lg:gap-4">
-            {mounted && (
-              <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
-              >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
-            )}
-            <button className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative transition-colors">
+            <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-full relative transition-colors">
               <Bell size={20} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
-            <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
-            <button className="flex items-center gap-2 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-              <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400">
+            <div className="h-8 w-px bg-slate-200 mx-1"></div>
+            <button className="flex items-center gap-2 p-1.5 hover:bg-slate-100 rounded-full transition-colors">
+              <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
                 <User size={18} />
               </div>
-              <ChevronRight size={14} className="text-slate-400 dark:text-slate-500" />
+              <ChevronRight size={14} className="text-slate-400" />
             </button>
           </div>
         </header>
