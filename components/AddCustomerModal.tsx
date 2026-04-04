@@ -110,6 +110,7 @@ export default function AddCustomerModal({ isOpen, onClose, onAdd }: AddCustomer
                 required
                 type="text"
                 value={formData.name}
+                onFocus={(e) => e.target.select()}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all text-sm"
                 placeholder="Enter customer name"
@@ -124,6 +125,7 @@ export default function AddCustomerModal({ isOpen, onClose, onAdd }: AddCustomer
                 required
                 type="tel"
                 value={formData.phone}
+                onFocus={(e) => e.target.select()}
                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all text-sm"
                 placeholder="e.g. 017XXXXXXXX"
@@ -137,6 +139,7 @@ export default function AddCustomerModal({ isOpen, onClose, onAdd }: AddCustomer
               <input 
                 type="email"
                 value={formData.email}
+                onFocus={(e) => e.target.select()}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all text-sm"
                 placeholder="customer@example.com"
@@ -163,6 +166,7 @@ export default function AddCustomerModal({ isOpen, onClose, onAdd }: AddCustomer
               <textarea 
                 required
                 value={formData.address}
+                onFocus={(e) => e.target.select()}
                 onChange={(e) => setFormData({...formData, address: e.target.value})}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all text-sm min-h-[100px] resize-none"
                 placeholder="Enter complete address details..."
@@ -174,6 +178,7 @@ export default function AddCustomerModal({ isOpen, onClose, onAdd }: AddCustomer
               <input 
                 type="number"
                 value={Number.isNaN(formData.initialBalance) ? '' : formData.initialBalance}
+                onFocus={(e) => e.target.select()}
                 onChange={(e) => setFormData({...formData, initialBalance: parseFloat(e.target.value) || 0})}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all text-sm"
                 placeholder="0.00"

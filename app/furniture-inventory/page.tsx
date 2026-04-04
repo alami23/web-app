@@ -79,7 +79,14 @@ export default function FurnitureInventoryPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
+    const newData = { ...formData, [name]: value }
+
+    // Clear SKU if category changes
+    if (name === 'category') {
+      newData.sku = ''
+    }
+
+    setFormData(newData)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -151,6 +158,7 @@ export default function FurnitureInventoryPage() {
                 resetForm()
                 setEditingId(null)
                 setIsAdding(true)
+                setSearchTerm('')
               }}
               className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
             >

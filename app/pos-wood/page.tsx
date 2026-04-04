@@ -229,6 +229,8 @@ export default function POSWood() {
                   onChange={(e) => {
                     setSelectedCategory(e.target.value)
                     setSelectedSubCategory('All')
+                    setEditingId(null)
+                    setEditData(null)
                   }}
                 >
                   {Object.keys(categoryData).map(cat => (
@@ -242,7 +244,11 @@ export default function POSWood() {
                   disabled={selectedCategory === 'All'}
                   className="w-full p-2.5 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all disabled:bg-slate-50 disabled:text-slate-400"
                   value={selectedSubCategory}
-                  onChange={(e) => setSelectedSubCategory(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedSubCategory(e.target.value)
+                    setEditingId(null)
+                    setEditData(null)
+                  }}
                 >
                   {selectedCategory === 'All' ? (
                     <option value="All">Select Category First</option>

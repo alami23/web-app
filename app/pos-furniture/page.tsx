@@ -195,6 +195,7 @@ export default function POSFurniture() {
                 placeholder="Search furniture..." 
                 className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                 value={searchTerm}
+                onFocus={(e) => e.target.select()}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
@@ -504,6 +505,7 @@ export default function POSFurniture() {
                   className="flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
                   value={Number.isNaN(discount) ? '' : discount}
+                  onFocus={(e) => e.target.select()}
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
                 />
               </div>
@@ -515,6 +517,7 @@ export default function POSFurniture() {
                   type="number" 
                   className="w-20 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   value={Number.isNaN(deliveryCharge) ? '' : deliveryCharge}
+                  onFocus={(e) => e.target.select()}
                   onChange={(e) => setDeliveryCharge(parseFloat(e.target.value) || 0)}
                 />
               </div>
@@ -532,6 +535,7 @@ export default function POSFurniture() {
                     type="number" 
                     className="w-28 p-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-right font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     value={Number.isNaN(paidAmount) ? '' : paidAmount}
+                    onFocus={(e) => e.target.select()}
                     onChange={(e) => setPaidAmount(parseFloat(e.target.value) || 0)}
                   />
                 </div>

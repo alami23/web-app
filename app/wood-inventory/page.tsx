@@ -91,6 +91,12 @@ export default function WoodInventoryPage() {
     const { name, value } = e.target
     const newData = { ...formData, [name]: value }
 
+    // Clear subCategory and carNo if category changes
+    if (name === 'category') {
+      newData.subCategory = ''
+      newData.carNo = ''
+    }
+
     // Auto-calculate CFT if width or length changes
     if (name === 'width' || name === 'length') {
       const w = parseFloat(name === 'width' ? value : (formData.width?.toString() || '0')) || 0
@@ -121,6 +127,7 @@ export default function WoodInventoryPage() {
     setFormData({
       name: '',
       category: 'Hardwood',
+      subCategory: '',
       carNo: '',
       width: 0,
       length: 0,
@@ -163,6 +170,7 @@ export default function WoodInventoryPage() {
                 resetForm()
                 setEditingId(null)
                 setIsAdding(true)
+                setSearchTerm('')
               }}
               className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
             >
