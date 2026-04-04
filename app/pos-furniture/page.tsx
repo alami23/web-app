@@ -503,7 +503,7 @@ export default function POSFurniture() {
                   type="number" 
                   className="flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
-                  value={discount || ''}
+                  value={Number.isNaN(discount) ? '' : discount}
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
                 />
               </div>
@@ -514,7 +514,7 @@ export default function POSFurniture() {
                 <input 
                   type="number" 
                   className="w-20 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  value={deliveryCharge || ''}
+                  value={Number.isNaN(deliveryCharge) ? '' : deliveryCharge}
                   onChange={(e) => setDeliveryCharge(parseFloat(e.target.value) || 0)}
                 />
               </div>
@@ -531,7 +531,7 @@ export default function POSFurniture() {
                   <input 
                     type="number" 
                     className="w-28 p-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-right font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    value={paidAmount || ''}
+                    value={Number.isNaN(paidAmount) ? '' : paidAmount}
                     onChange={(e) => setPaidAmount(parseFloat(e.target.value) || 0)}
                   />
                 </div>

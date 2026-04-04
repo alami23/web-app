@@ -306,7 +306,7 @@ export default function POSWood() {
                         <input 
                           type="number" 
                           className="w-14 p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-                          value={editData.width}
+                          value={Number.isNaN(editData.width) ? '' : editData.width}
                           onChange={(e) => handleEditChange('width', parseFloat(e.target.value))}
                         />
                       ) : `${product.width}"`}
@@ -316,7 +316,7 @@ export default function POSWood() {
                         <input 
                           type="number" 
                           className="w-14 p-0.5 border border-slate-300 rounded outline-none focus:border-amber-500 text-[10px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-                          value={editData.length}
+                          value={Number.isNaN(editData.length) ? '' : editData.length}
                           onChange={(e) => handleEditChange('length', parseFloat(e.target.value))}
                         />
                       ) : `${product.length}'`}
@@ -327,7 +327,7 @@ export default function POSWood() {
                           type="number" 
                           readOnly
                           className="w-24 p-0.5 border border-slate-200 bg-slate-50 rounded outline-none text-slate-500 cursor-not-allowed text-[10px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-                          value={editData.cft.toFixed(5)}
+                          value={Number.isNaN(editData.cft) ? '' : editData.cft.toFixed(5)}
                         />
                       ) : (
                         <span className="font-bold">{product.cft.toFixed(5)}</span>
@@ -350,7 +350,7 @@ export default function POSWood() {
                         <input 
                           type="number" 
                           className="w-20 p-1 border border-slate-300 rounded outline-none focus:border-amber-500 text-xs text-center font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
-                          value={editData.price}
+                          value={Number.isNaN(editData.price) ? '' : editData.price}
                           onChange={(e) => handleEditChange('price', parseInt(e.target.value))}
                         />
                       ) : `৳${product.price}`}
@@ -573,7 +573,7 @@ export default function POSWood() {
                   type="number" 
                   className="flex-1 min-w-0 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
-                  value={discount || ''}
+                  value={Number.isNaN(discount) ? '' : discount}
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
                 />
               </div>
@@ -584,7 +584,7 @@ export default function POSWood() {
                 <input 
                   type="number" 
                   className="w-20 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  value={deliveryCharge || ''}
+                  value={Number.isNaN(deliveryCharge) ? '' : deliveryCharge}
                   onChange={(e) => setDeliveryCharge(parseFloat(e.target.value) || 0)}
                 />
               </div>
@@ -601,7 +601,7 @@ export default function POSWood() {
                   <input 
                     type="number" 
                     className="w-28 p-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-right font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    value={paidAmount || ''}
+                    value={Number.isNaN(paidAmount) ? '' : paidAmount}
                     onChange={(e) => setPaidAmount(parseFloat(e.target.value) || 0)}
                   />
                 </div>
