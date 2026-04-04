@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Search, Filter, Download, Printer, Eye, MoreHorizontal, Calendar, User, Plus } from 'lucide-react'
 import { cn, safeParse } from '@/lib/utils'
+import InvoiceModal from '@/components/InvoiceModal'
 
 const initialInvoices = [
   { id: 'INV-2024-001', customer: 'Alice Johnson', date: '2024-03-20', deliveryDate: '2024-03-25', amount: 45000, paid: 45000, due: 0, status: 'Paid', type: 'Furniture' },
@@ -16,6 +17,8 @@ const initialInvoices = [
 export default function InvoicePage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [invoices, setInvoices] = useState<any[]>([])
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
 
   useEffect(() => {
     const loadInvoices = () => {
@@ -141,10 +144,22 @@ export default function InvoicePage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                        <button 
+                          onClick={() => {
+                            setSelectedInvoice(inv)
+                            setIsInvoiceModalOpen(true)
+                          }}
+                          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                        >
                           <Eye size={18} />
                         </button>
-                        <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                        <button 
+                          onClick={() => {
+                            setSelectedInvoice(inv)
+                            setIsInvoiceModalOpen(true)
+                          }}
+                          className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                        >
                           <Printer size={18} />
                         </button>
                         <button className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
@@ -158,6 +173,12 @@ export default function InvoicePage() {
             </table>
           </div>
         </div>
+
+        <InvoiceModal 
+          isOpen={isInvoiceModalOpen}
+          onClose={() => setIsInvoiceModalOpen(false)}
+          invoice={selectedInvoice}
+        />
       </div>
     </DashboardLayout>
   )

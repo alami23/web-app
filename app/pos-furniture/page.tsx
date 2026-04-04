@@ -7,6 +7,7 @@ import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Armchair, LayoutGri
 import { motion, AnimatePresence } from 'motion/react'
 import { cn, safeParse } from '@/lib/utils'
 import AddCustomerModal from '@/components/AddCustomerModal'
+import InvoiceModal from '@/components/InvoiceModal'
 
 interface FurnitureProduct {
   id: number
@@ -68,6 +69,8 @@ export default function POSFurniture() {
   const [discountType, setDiscountType] = useState<'fixed' | 'percent'>('fixed')
   const [deliveryCharge, setDeliveryCharge] = useState(0)
   const [paidAmount, setPaidAmount] = useState(0)
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
   const [customers, setCustomers] = useState<any[]>([])
   const [selectedCustomer, setSelectedCustomer] = useState('Walk-in Customer')
   const [isAddingCustomer, setIsAddingCustomer] = useState(false)
@@ -162,6 +165,7 @@ export default function POSFurniture() {
     const invoices = safeParse(savedInvoices, [])
     localStorage.setItem('invoices_list', JSON.stringify([newInvoice, ...invoices]))
 
+    setSelectedInvoice(newInvoice)
     setProducts(updatedProducts)
     setCart([])
     setIsCheckoutSuccess(true)
@@ -580,16 +584,33 @@ export default function POSFurniture() {
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-2">Order Successful!</h2>
               <p className="text-slate-500 mb-8">The furniture stock has been updated and the invoice is ready.</p>
-              <button 
-                onClick={() => setIsCheckoutSuccess(false)}
-                className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all"
-              >
-                Continue Shopping
-              </button>
+              <div className="flex flex-col gap-3">
+                <button 
+                  onClick={() => {
+                    setIsCheckoutSuccess(false)
+                    setIsInvoiceModalOpen(true)
+                  }}
+                  className="w-full py-4 bg-amber-600 text-white font-bold rounded-2xl hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20 flex items-center justify-center gap-2"
+                >
+                  <Printer size={20} /> Print Invoice
+                </button>
+                <button 
+                  onClick={() => setIsCheckoutSuccess(false)}
+                  className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
+                >
+                  Continue Shopping
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+
+      <InvoiceModal 
+        isOpen={isInvoiceModalOpen}
+        onClose={() => setIsInvoiceModalOpen(false)}
+        invoice={selectedInvoice}
+      />
       {/* Add Customer Modal */}
       <AddCustomerModal 
         isOpen={isAddingCustomer}

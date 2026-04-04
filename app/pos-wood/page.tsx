@@ -7,6 +7,7 @@ import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Filter, Pencil, Che
 import { motion, AnimatePresence } from 'motion/react'
 import { cn, safeParse } from '@/lib/utils'
 import AddCustomerModal from '@/components/AddCustomerModal'
+import InvoiceModal from '@/components/InvoiceModal'
 
 const initialWoodProducts = [
   { id: 1, name: 'Segun Wood Log', category: 'Hardwood', subCategory: '101', carNo: '1', width: 24, length: 12, cft: 3.000000, description: 'Premium grade Segun wood log for furniture', price: 1200, stock: 150, unit: 'cu ft', image: 'https://picsum.photos/seed/segun/200/200' },
@@ -73,6 +74,8 @@ export default function POSWood() {
   const [discountType, setDiscountType] = useState<'fixed' | 'percent'>('fixed')
   const [deliveryCharge, setDeliveryCharge] = useState(0)
   const [paidAmount, setPaidAmount] = useState(0)
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
 
   useEffect(() => {
     const loadCustomers = () => {
@@ -139,7 +142,11 @@ export default function POSWood() {
         name: item.name,
         price: item.price,
         cft: item.cft,
-        total: item.price * item.cft
+        total: item.price * item.cft,
+        carNo: item.carNo,
+        treeNo: item.subCategory,
+        width: item.width,
+        length: item.length
       }))
     }
 
@@ -147,6 +154,7 @@ export default function POSWood() {
     const invoices = safeParse(savedInvoices, [])
     localStorage.setItem('invoices_list', JSON.stringify([newInvoice, ...invoices]))
 
+    setSelectedInvoice(newInvoice)
     setProducts(updatedProducts)
     setCart([])
     setIsCheckoutSuccess(true)
@@ -648,16 +656,33 @@ export default function POSWood() {
                 </div>
                 <h3 className="text-2xl font-bold text-slate-800 mb-2">Sale Complete!</h3>
                 <p className="text-slate-500 mb-8">The wood inventory has been automatically updated and the invoice is ready.</p>
-                <button 
-                  onClick={() => setIsCheckoutSuccess(false)}
-                  className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
-                >
-                  Continue
-                </button>
+                <div className="flex flex-col gap-3">
+                  <button 
+                    onClick={() => {
+                      setIsCheckoutSuccess(false)
+                      setIsInvoiceModalOpen(true)
+                    }}
+                    className="w-full py-4 bg-amber-600 text-white font-bold rounded-2xl hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20 flex items-center justify-center gap-2"
+                  >
+                    <Printer size={20} /> Print Invoice
+                  </button>
+                  <button 
+                    onClick={() => setIsCheckoutSuccess(false)}
+                    className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
+                  >
+                    Continue Shopping
+                  </button>
+                </div>
               </motion.div>
             </div>
           )}
         </AnimatePresence>
+
+        <InvoiceModal 
+          isOpen={isInvoiceModalOpen}
+          onClose={() => setIsInvoiceModalOpen(false)}
+          invoice={selectedInvoice}
+        />
       </div>
     </DashboardLayout>
   )
