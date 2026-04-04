@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { Search, Filter, ArrowUpRight, ArrowDownLeft, Calendar, Tag, CreditCard, MoreHorizontal } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, safeParse } from '@/lib/utils'
 
 const transactions = [
   { id: 'TXN-001', date: '2024-03-20', type: 'Sale', ref: 'INV-2024-001', amount: 45000, method: 'Bank', status: 'Completed', entity: 'Alice Johnson' },
@@ -14,6 +14,25 @@ const transactions = [
 ]
 
 export default function TransactionsPage() {
+  const [transactionsList, setTransactionsList] = useState<any[]>(() => {
+    if (typeof window !== 'undefined') {
+      const savedInvoices = localStorage.getItem('invoices_list')
+      const invoices = safeParse(savedInvoices, [] as any[])
+      
+      return invoices.map((inv: any) => ({
+        id: `TXN-${inv.id.split('-')[1] || inv.id}`,
+        date: inv.date,
+        type: 'Sale',
+        ref: inv.id,
+        amount: inv.amount,
+        method: 'Cash', // Default for now
+        status: 'Completed',
+        entity: inv.customer
+      }))
+    }
+    return []
+  })
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -57,7 +76,7 @@ export default function TransactionsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {transactions.map((txn) => (
+                {transactionsList.map((txn) => (
                   <tr key={txn.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">

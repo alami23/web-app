@@ -30,8 +30,24 @@ const initialCustomers: Customer[] = [
 export default function CustomerPage() {
   const [customersList, setCustomersList] = useState<Customer[]>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('customers_list')
-      return safeParse(saved, initialCustomers)
+      const savedCustomers = localStorage.getItem('customers_list')
+      const customers = safeParse(savedCustomers, initialCustomers)
+      
+      const savedInvoices = localStorage.getItem('invoices_list')
+      const invoices = safeParse(savedInvoices, [] as any[])
+
+      // Update customer stats from real invoices
+      return customers.map((cus: Customer) => {
+        const customerInvoices = invoices.filter((inv: any) => inv.customer === cus.name)
+        return {
+          ...cus,
+          totalOrders: customerInvoices.length,
+          totalDue: customerInvoices.reduce((sum: number, inv: any) => sum + (inv.due || 0), 0),
+          lastPurchase: customerInvoices.length > 0 
+            ? customerInvoices.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())[0].date 
+            : cus.lastPurchase
+        }
+      })
     }
     return initialCustomers
   })

@@ -31,14 +31,42 @@ function CustomerStatementContent() {
   const searchParams = useSearchParams()
   const customerId = searchParams.get('id')
   const [customer, setCustomer] = useState<Customer | null>(null)
+  const [customerTransactions, setCustomerTransactions] = useState<any[]>([])
 
   useEffect(() => {
+    const savedCustomers = localStorage.getItem('customers_list')
+    const customers = safeParse(savedCustomers, [] as Customer[])
+    
+    const savedInvoices = localStorage.getItem('invoices_list')
+    const invoices = safeParse(savedInvoices, [] as any[])
+
     if (customerId) {
-      const saved = localStorage.getItem('customers_list')
-      const list = safeParse(saved, [] as Customer[])
-      const found = list.find(c => c.id === customerId)
+      const found = customers.find(c => c.id === customerId)
       if (found) {
         setCustomer(found)
+        
+        // Filter invoices for this customer
+        const filteredInvoices = invoices.filter((inv: any) => inv.customer === found.name)
+        
+        // Transform invoices into transactions
+        let runningBalance = 0
+        const txns = filteredInvoices
+          .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
+          .map((inv: any) => {
+            runningBalance += inv.due
+            return {
+              id: inv.id,
+              date: inv.date,
+              type: 'Invoice',
+              ref: inv.id,
+              debit: inv.amount,
+              credit: inv.paid,
+              balance: runningBalance,
+              items: inv.items
+            }
+          })
+        
+        setCustomerTransactions(txns)
       }
     }
   }, [customerId])
@@ -105,15 +133,15 @@ function CustomerStatementContent() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full md:w-auto border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800 pt-6 md:pt-0 md:pl-8">
             <div>
               <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Total Billed</p>
-              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">৳{(displayCustomer.totalDue + 146000).toLocaleString()}</p>
+              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">৳{customerTransactions.reduce((acc, t) => acc + t.debit, 0).toLocaleString()}</p>
             </div>
             <div>
               <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Total Paid</p>
-              <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">৳146,000</p>
+              <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">৳{customerTransactions.reduce((acc, t) => acc + t.credit, 0).toLocaleString()}</p>
             </div>
             <div className="col-span-2 md:col-span-1">
               <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Current Due</p>
-              <p className="text-lg font-bold text-rose-500 dark:text-rose-400">৳{displayCustomer.totalDue.toLocaleString()}</p>
+              <p className="text-lg font-bold text-rose-500 dark:text-rose-400">৳{customerTransactions.length > 0 ? customerTransactions[customerTransactions.length - 1].balance.toLocaleString() : '0'}</p>
             </div>
           </div>
         </div>
@@ -139,13 +167,22 @@ function CustomerStatementContent() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {transactions.map((txn) => (
+                {customerTransactions.map((txn) => (
                   <tr key={txn.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{txn.date}</td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        {txn.debit > 0 ? <ArrowUpRight size={14} className="text-rose-400" /> : <ArrowDownLeft size={14} className="text-emerald-400" />}
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{txn.type}</span>
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          {txn.debit > 0 ? <ArrowUpRight size={14} className="text-rose-400" /> : <ArrowDownLeft size={14} className="text-emerald-400" />}
+                          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{txn.type}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {txn.items?.map((item: any, i: number) => (
+                            <span key={i} className="text-[10px] bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-slate-500">
+                              {item.name || (item.treeNo ? `Tree: ${item.treeNo}` : 'Item')}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-amber-600 dark:text-amber-400 font-medium">{txn.ref}</td>
@@ -158,7 +195,7 @@ function CustomerStatementContent() {
               <tfoot className="bg-slate-50 dark:bg-slate-800/50 font-bold text-slate-900 dark:text-slate-100">
                 <tr>
                   <td colSpan={5} className="px-6 py-4 text-right uppercase tracking-wider text-xs text-slate-500 dark:text-slate-400">Closing Balance</td>
-                  <td className="px-6 py-4 text-right text-lg">৳{displayCustomer.totalDue.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-right text-lg">৳{(customerTransactions.length > 0 ? customerTransactions[customerTransactions.length - 1].balance : 0).toLocaleString()}</td>
                 </tr>
               </tfoot>
             </table>
