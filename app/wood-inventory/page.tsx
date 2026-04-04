@@ -389,7 +389,7 @@ export default function WoodInventoryPage() {
                       <input 
                         type="number"
                         name="width"
-                        value={formData.width}
+                        value={Number.isNaN(formData.width) ? '' : formData.width}
                         onChange={handleInputChange}
                         className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                       />
@@ -399,7 +399,7 @@ export default function WoodInventoryPage() {
                       <input 
                         type="number"
                         name="length"
-                        value={formData.length}
+                        value={Number.isNaN(formData.length) ? '' : formData.length}
                         onChange={handleInputChange}
                         className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                       />
@@ -410,7 +410,7 @@ export default function WoodInventoryPage() {
                         readOnly
                         type="number"
                         name="cft"
-                        value={formData.cft}
+                        value={Number.isNaN(formData.cft) ? '' : formData.cft}
                         className="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl outline-none text-slate-500 cursor-not-allowed"
                       />
                     </div>
@@ -420,7 +420,7 @@ export default function WoodInventoryPage() {
                         required
                         type="number"
                         name="price"
-                        value={formData.price}
+                        value={Number.isNaN(formData.price) ? '' : formData.price}
                         onChange={handleInputChange}
                         className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                       />
@@ -431,7 +431,7 @@ export default function WoodInventoryPage() {
                         required
                         type="number"
                         name="stock"
-                        value={formData.stock}
+                        value={Number.isNaN(formData.stock) ? '' : formData.stock}
                         onChange={handleInputChange}
                         className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
                       />

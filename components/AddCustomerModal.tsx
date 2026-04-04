@@ -173,7 +173,7 @@ export default function AddCustomerModal({ isOpen, onClose, onAdd }: AddCustomer
               <label className="text-sm font-bold text-slate-700">Initial Opening Balance (৳)</label>
               <input 
                 type="number"
-                value={formData.initialBalance}
+                value={Number.isNaN(formData.initialBalance) ? '' : formData.initialBalance}
                 onChange={(e) => setFormData({...formData, initialBalance: parseFloat(e.target.value) || 0})}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 transition-all text-sm"
                 placeholder="0.00"
