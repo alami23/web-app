@@ -17,62 +17,62 @@ export default function StaffStatementPage() {
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-display font-bold text-slate-900">Staff Statement</h1>
-            <p className="text-slate-500">Salary history, incentives, and attendance summary.</p>
+            <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-slate-100">Staff Statement</h1>
+            <p className="text-slate-500 dark:text-slate-400">Salary history, incentives, and attendance summary.</p>
           </div>
           <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300">
               <Printer size={18} /> Print
             </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300">
               <Download size={18} /> Export PDF
             </button>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-8 items-center">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row gap-8 items-center">
           <div className="flex items-center gap-4 flex-1">
             <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-indigo-600/20">
               RA
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-900">Rahim Ahmed</h2>
-              <p className="text-slate-500 text-sm">Staff ID: STF-001 • Carpenter • Workshop</p>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Rahim Ahmed</h2>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">Staff ID: STF-001 • Carpenter • Workshop</p>
               <div className="flex items-center gap-4 mt-2">
-                <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">ACTIVE</span>
-                <span className="text-xs text-slate-400">Joined: Jan 15, 2023</span>
+                <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full font-bold">ACTIVE</span>
+                <span className="text-xs text-slate-400 dark:text-slate-500">Joined: Jan 15, 2023</span>
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 w-full md:w-auto border-t md:border-t-0 md:border-l border-slate-100 pt-6 md:pt-0 md:pl-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 w-full md:w-auto border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800 pt-6 md:pt-0 md:pl-8">
             <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Monthly Salary</p>
-              <p className="text-lg font-bold text-slate-900">৳25,000</p>
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Monthly Salary</p>
+              <p className="text-lg font-bold text-slate-900 dark:text-slate-100">৳25,000</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Paid</p>
-              <p className="text-lg font-bold text-emerald-600">৳350,000</p>
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Total Paid</p>
+              <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">৳350,000</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Advance</p>
-              <p className="text-lg font-bold text-rose-500">৳2,000</p>
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Advance</p>
+              <p className="text-lg font-bold text-rose-500 dark:text-rose-400">৳2,000</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Attendance</p>
-              <p className="text-lg font-bold text-indigo-600">98%</p>
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Attendance</p>
+              <p className="text-lg font-bold text-indigo-600 dark:text-indigo-400">98%</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="p-4 border-b border-slate-100 bg-slate-50/50">
-                <h3 className="font-bold text-slate-800 flex items-center gap-2"><Wallet size={18} /> Salary History</h3>
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+              <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                <h3 className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2"><Wallet size={18} /> Salary History</h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
-                  <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                  <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
                     <tr>
                       <th className="px-6 py-4 font-semibold">Month</th>
                       <th className="px-6 py-4 font-semibold">Amount</th>
@@ -81,15 +81,15 @@ export default function StaffStatementPage() {
                       <th className="px-6 py-4 font-semibold">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                     {salaryHistory.map((sal) => (
-                      <tr key={sal.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4 text-sm font-bold text-slate-900">{sal.month}</td>
-                        <td className="px-6 py-4 text-sm font-bold text-slate-900">৳{sal.amount.toLocaleString()}</td>
-                        <td className="px-6 py-4 text-sm text-slate-600">{sal.date}</td>
-                        <td className="px-6 py-4 text-sm text-slate-500">{sal.method}</td>
+                      <tr key={sal.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-slate-100">{sal.month}</td>
+                        <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-slate-100">৳{sal.amount.toLocaleString()}</td>
+                        <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">{sal.date}</td>
+                        <td className="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">{sal.method}</td>
                         <td className="px-6 py-4">
-                          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded uppercase">{sal.status}</span>
+                          <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold rounded uppercase">{sal.status}</span>
                         </td>
                       </tr>
                     ))}
@@ -100,38 +100,38 @@ export default function StaffStatementPage() {
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2"><Award size={18} /> Incentives & Bonus</h3>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <h3 className="font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2"><Award size={18} /> Incentives & Bonus</h3>
               <div className="space-y-4">
                 {[
                   { title: 'Best Carpenter of Month', date: 'Feb 2024', amount: '৳2,000' },
                   { title: 'Overtime Bonus', date: 'Jan 2024', amount: '৳1,500' },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                  <div key={i} className="flex items-center justify-between p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl border border-indigo-100 dark:border-indigo-800">
                     <div>
-                      <p className="text-sm font-bold text-indigo-900">{item.title}</p>
-                      <p className="text-xs text-indigo-600">{item.date}</p>
+                      <p className="text-sm font-bold text-indigo-900 dark:text-indigo-200">{item.title}</p>
+                      <p className="text-xs text-indigo-600 dark:text-indigo-400">{item.date}</p>
                     </div>
-                    <span className="font-bold text-indigo-700">{item.amount}</span>
+                    <span className="font-bold text-indigo-700 dark:text-indigo-400">{item.amount}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2"><Clock size={18} /> Work Summary</h3>
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+              <h3 className="font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2"><Clock size={18} /> Work Summary</h3>
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Completed Projects</span>
-                  <span className="font-bold text-slate-900">12</span>
+                  <span className="text-slate-500 dark:text-slate-400">Completed Projects</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-100">12</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Pending Tasks</span>
-                  <span className="font-bold text-slate-900">3</span>
+                  <span className="text-slate-500 dark:text-slate-400">Pending Tasks</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-100">3</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Avg. Daily Hours</span>
-                  <span className="font-bold text-slate-900">8.5h</span>
+                  <span className="text-slate-500 dark:text-slate-400">Avg. Daily Hours</span>
+                  <span className="font-bold text-slate-900 dark:text-slate-100">8.5h</span>
                 </div>
               </div>
             </div>

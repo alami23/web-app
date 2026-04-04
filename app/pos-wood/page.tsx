@@ -274,7 +274,7 @@ export default function POSWood() {
                   <th className="px-3 py-2 font-semibold w-28">CFT</th>
                   <th className="px-2 py-2 font-semibold">Description</th>
                   <th className="px-1 py-2 font-semibold w-14 text-center">Rate</th>
-                  <th className="px-1 py-2 font-semibold text-center w-28">Action</th>
+                  <th className="px-1 py-2 font-semibold text-center w-32">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -362,7 +362,7 @@ export default function POSWood() {
                       ) : `৳${product.price}`}
                     </td>
                     <td className="px-1 py-2 text-center">
-                      <div className="flex items-center justify-center gap-2">
+                      <div className="flex items-center justify-center gap-4">
                         {editingId === product.id ? (
                           <>
                             <button 
@@ -577,7 +577,7 @@ export default function POSWood() {
                 </div>
                 <input 
                   type="number" 
-                  className="w-32 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-40 p-2 bg-white border border-slate-200 rounded-lg text-sm text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
                   value={discount === 0 ? '' : discount}
                   onChange={(e) => setDiscount(parseFloat(e.target.value) || 0)}
@@ -589,7 +589,7 @@ export default function POSWood() {
                 <span className="text-slate-600 text-xs whitespace-nowrap">Delivery</span>
                 <input 
                   type="number" 
-                  className="w-32 p-1.5 bg-white border border-slate-200 rounded-lg text-xs text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="w-40 p-2 bg-white border border-slate-200 rounded-lg text-sm text-right outline-none focus:border-amber-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   placeholder="0"
                   value={deliveryCharge === 0 ? '' : deliveryCharge}
                   onChange={(e) => setDeliveryCharge(parseFloat(e.target.value) || 0)}
@@ -607,7 +607,7 @@ export default function POSWood() {
                   <span className="text-emerald-600 font-bold text-xs">Paid</span>
                   <input 
                     type="number" 
-                    className="w-32 p-1.5 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-right font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    className="w-40 p-2 bg-emerald-50 border border-emerald-100 rounded-lg text-sm text-right font-bold text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-500/20 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     placeholder="0"
                     value={paidAmount === 0 ? '' : paidAmount}
                     onChange={(e) => setPaidAmount(parseFloat(e.target.value) || 0)}

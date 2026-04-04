@@ -135,20 +135,20 @@ export default function FurnitureInventoryPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-display font-bold text-slate-900">Furniture Inventory</h1>
-            <p className="text-slate-500">Manage your furniture catalog, stock levels, and pricing.</p>
+            <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-slate-100">Furniture Inventory</h1>
+            <p className="text-slate-500 dark:text-slate-400">Manage your furniture catalog, stock levels, and pricing.</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex bg-white border border-slate-200 rounded-xl p-1 shadow-sm">
+            <div className="flex bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-1 shadow-sm">
               <button 
                 onClick={() => setViewMode('grid')}
-                className={cn("p-2 rounded-lg transition-colors", viewMode === 'grid' ? "bg-slate-100 text-amber-600" : "text-slate-400")}
+                className={cn("p-2 rounded-lg transition-colors", viewMode === 'grid' ? "bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400" : "text-slate-400 dark:text-slate-500")}
               >
                 <LayoutGrid size={18} />
               </button>
               <button 
                 onClick={() => setViewMode('table')}
-                className={cn("p-2 rounded-lg transition-colors", viewMode === 'table' ? "bg-slate-100 text-amber-600" : "text-slate-400")}
+                className={cn("p-2 rounded-lg transition-colors", viewMode === 'table' ? "bg-slate-100 dark:bg-slate-800 text-amber-600 dark:text-amber-400" : "text-slate-400 dark:text-slate-500")}
               >
                 <List size={18} />
               </button>
@@ -160,7 +160,7 @@ export default function FurnitureInventoryPage() {
                 setIsAdding(true)
                 setSearchTerm('')
               }}
-              className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20"
+              className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 dark:bg-slate-800 text-white rounded-xl text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-700 transition-all shadow-lg shadow-slate-900/20"
             >
               <Plus size={18} /> Add Furniture
             </button>
@@ -168,22 +168,22 @@ export default function FurnitureInventoryPage() {
         </div>
 
         {/* Filters & Search */}
-        <div className="flex flex-col md:flex-row gap-4 items-center bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="flex flex-col md:flex-row gap-4 items-center bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input 
               type="text" 
               placeholder="Search by name, category, or SKU..." 
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-2 w-full md:w-auto">
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-100 transition-all">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 rounded-xl text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
               <Filter size={18} /> Filters
             </button>
-            <button className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 border border-slate-200 text-slate-600 rounded-xl text-sm font-medium hover:bg-slate-100 transition-all">
+            <button className="flex items-center gap-2 px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 rounded-xl text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
               <Download size={18} /> Export
             </button>
           </div>
@@ -191,10 +191,10 @@ export default function FurnitureInventoryPage() {
 
         {/* Inventory View */}
         {viewMode === 'table' ? (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
+                <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
                   <tr>
                     <th className="px-6 py-4 font-semibold">Product</th>
                     <th className="px-6 py-4 font-semibold">SKU</th>
@@ -204,12 +204,12 @@ export default function FurnitureInventoryPage() {
                     <th className="px-6 py-4 font-semibold text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredProducts.map((product) => (
-                    <tr key={product.id} className="hover:bg-slate-50 transition-colors group">
+                    <tr key={product.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-100 relative">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 relative">
                             <Image 
                               src={product.image} 
                               alt={product.name} 
@@ -219,16 +219,16 @@ export default function FurnitureInventoryPage() {
                             />
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-slate-900">{product.name}</p>
-                            <p className="text-xs text-slate-500 truncate max-w-[200px]">{product.description}</p>
+                            <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{product.name}</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[200px]">{product.description}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm font-mono text-slate-500">
+                      <td className="px-6 py-4 text-sm font-mono text-slate-500 dark:text-slate-400">
                         {product.sku}
                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-bold rounded uppercase tracking-wider">
+                        <span className="px-2.5 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[10px] font-bold rounded uppercase tracking-wider">
                           {product.category}
                         </span>
                       </td>
@@ -236,11 +236,11 @@ export default function FurnitureInventoryPage() {
                         <div className="flex flex-col gap-1">
                           <span className={cn(
                             "text-sm font-bold",
-                            product.stock < 5 ? "text-rose-600" : "text-slate-900"
+                            product.stock < 5 ? "text-rose-600 dark:text-rose-400" : "text-slate-900 dark:text-slate-100"
                           )}>
                             {product.stock} units
                           </span>
-                          <div className="w-20 bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                          <div className="w-20 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
                             <div 
                               className={cn(
                                 "h-full rounded-full",
@@ -251,20 +251,20 @@ export default function FurnitureInventoryPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm font-bold text-slate-900">
+                      <td className="px-6 py-4 text-sm font-bold text-slate-900 dark:text-slate-100">
                         ৳{product.price.toLocaleString()}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-1">
                           <button 
                             onClick={() => handleEdit(product)}
-                            className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-amber-600 transition-colors"
+                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                           >
                             <Edit2 size={16} />
                           </button>
                           <button 
                             onClick={() => handleDelete(product.id)}
-                            className="p-2 hover:bg-rose-50 rounded-lg text-slate-400 hover:text-rose-500 transition-colors"
+                            className="p-2 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
                           >
                             <Trash2 size={16} />
                           </button>
@@ -279,8 +279,8 @@ export default function FurnitureInventoryPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden group hover:shadow-xl transition-all">
-                <div className="aspect-[4/3] relative overflow-hidden bg-slate-100">
+              <div key={product.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden group hover:shadow-xl transition-all">
+                <div className="aspect-[4/3] relative overflow-hidden bg-slate-100 dark:bg-slate-800">
                   <Image 
                     src={product.image} 
                     alt={product.name} 
@@ -291,13 +291,13 @@ export default function FurnitureInventoryPage() {
                   <div className="absolute top-3 right-3 flex gap-2">
                     <button 
                       onClick={() => handleEdit(product)}
-                      className="p-2 bg-white/90 backdrop-blur-sm rounded-lg text-slate-600 hover:text-amber-600 shadow-sm transition-colors"
+                      className="p-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-lg text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 shadow-sm transition-colors"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button 
                       onClick={() => handleDelete(product.id)}
-                      className="p-2 bg-white/90 backdrop-blur-sm rounded-lg text-slate-600 hover:text-rose-600 shadow-sm transition-colors"
+                      className="p-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-lg text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 shadow-sm transition-colors"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -306,16 +306,16 @@ export default function FurnitureInventoryPage() {
                 <div className="p-4">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wider">{product.category}</p>
-                      <h3 className="font-bold text-slate-800 mt-1">{product.name}</h3>
+                      <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">{product.category}</p>
+                      <h3 className="font-bold text-slate-800 dark:text-slate-100 mt-1">{product.name}</h3>
                     </div>
-                    <p className="font-bold text-slate-900">৳{product.price.toLocaleString()}</p>
+                    <p className="font-bold text-slate-900 dark:text-slate-100">৳{product.price.toLocaleString()}</p>
                   </div>
                   <div className="mt-4 flex items-center justify-between">
-                    <p className="text-xs text-slate-500 font-mono">{product.sku}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-mono">{product.sku}</p>
                     <span className={cn(
                       "text-[10px] font-bold px-2 py-0.5 rounded",
-                      product.stock > 5 ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
+                      product.stock > 5 ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" : "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400"
                     )}>
                       {product.stock} IN STOCK
                     </span>
@@ -341,15 +341,15 @@ export default function FurnitureInventoryPage() {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden"
+                className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden"
               >
-                <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                  <h2 className="text-xl font-bold text-slate-800">
+                <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50">
+                  <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">
                     {editingId ? 'Edit Furniture' : 'Add New Furniture'}
                   </h2>
                   <button 
                     onClick={() => setIsAdding(false)}
-                    className="p-2 hover:bg-white rounded-xl text-slate-400 transition-colors"
+                    className="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-xl text-slate-400 dark:text-slate-500 transition-colors"
                   >
                     <X size={20} />
                   </button>
@@ -358,36 +358,36 @@ export default function FurnitureInventoryPage() {
                 <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700">Furniture Name</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Furniture Name</label>
                       <input 
                         required
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
                         placeholder="e.g. Royal King Size Bed"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700">SKU Code</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">SKU Code</label>
                       <input 
                         required
                         type="text"
                         name="sku"
                         value={formData.sku}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
                         placeholder="e.g. FUR-BED-001"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700">Category</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Category</label>
                       <select 
                         name="category"
                         value={formData.category}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
                       >
                         <option value="Bed">Bed</option>
                         <option value="Sofa">Sofa</option>
@@ -399,44 +399,44 @@ export default function FurnitureInventoryPage() {
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700">Price (৳)</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Price (৳)</label>
                       <input 
                         required
                         type="number"
                         name="price"
                         value={Number.isNaN(formData.price) ? '' : formData.price}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700">Stock Quantity</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Stock Quantity</label>
                       <input 
                         required
                         type="number"
                         name="stock"
                         value={Number.isNaN(formData.stock) ? '' : formData.stock}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all"
                       />
                     </div>
                     <div className="col-span-full space-y-2">
-                      <label className="text-sm font-bold text-slate-700">Description</label>
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Description</label>
                       <textarea 
                         name="description"
                         value={formData.description}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all min-h-[100px]"
+                        className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 dark:text-slate-100 transition-all min-h-[100px]"
                         placeholder="Add some details about this furniture item..."
                       />
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+                  <div className="flex items-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
                     <button 
                       type="button"
                       onClick={() => setIsAdding(false)}
-                      className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition-all"
+                      className="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
                     >
                       Cancel
                     </button>
