@@ -95,7 +95,45 @@ export default function InvoicePrint({ invoice, size }: InvoicePrintProps) {
       </table>
 
       {/* Calculations */}
-      <div className="flex justify-end">
+      <div className={cn("flex justify-between items-end", isPOS && "flex-col items-end")}>
+        <div className={cn("text-sm", isPOS && "w-full mb-4 border-b pb-2")}>
+          {!isPOS && (
+            <div className="w-64 space-y-1 border-t-2 border-slate-200 pt-2">
+              <p className="font-bold text-slate-900 uppercase text-xs mb-2">Account Summary</p>
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-600">Previous Due:</span>
+                  <span className="font-bold">৳{(invoice.oldDue || 0).toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-slate-600">Current Due:</span>
+                  <span className="font-bold text-amber-600">৳{invoice.due.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-base font-bold border-t border-slate-200 pt-1.5 mt-1.5">
+                  <span>Total Due:</span>
+                  <span className="text-rose-600">৳{((invoice.oldDue || 0) + invoice.due).toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+          )}
+          {isPOS && (invoice.oldDue > 0 || invoice.due > 0) && (
+            <div className="space-y-0.5 border-t border-dashed pt-1 mt-1 text-[9px]">
+              <div className="flex justify-between">
+                <span>Previous Due:</span>
+                <span>৳{(invoice.oldDue || 0).toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Current Due:</span>
+                <span>৳{invoice.due.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between font-bold border-t border-dotted mt-0.5 pt-0.5">
+                <span>Total Due:</span>
+                <span>৳{((invoice.oldDue || 0) + invoice.due).toLocaleString()}</span>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className={cn("w-64 space-y-2", isPOS && "w-full")}>
           <div className="flex justify-between text-sm">
             <span>Subtotal:</span>

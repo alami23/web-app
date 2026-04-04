@@ -139,10 +139,19 @@ export default function POSFurniture() {
       return product
     })
 
+    const savedInvoices = localStorage.getItem('invoices_list')
+    const invoices = safeParse(savedInvoices, [])
+
+    // Calculate old due for the selected customer
+    const oldDue = invoices
+      .filter((inv: any) => inv.customer === selectedCustomer)
+      .reduce((sum: number, inv: any) => sum + (inv.due || 0), 0)
+
     // Create Invoice
     const newInvoice = {
       id: `INV-${Date.now()}`,
       customer: selectedCustomer,
+      oldDue: oldDue,
       date: new Date().toISOString().split('T')[0],
       deliveryDate: new Date().toISOString().split('T')[0],
       amount: total,
@@ -161,8 +170,6 @@ export default function POSFurniture() {
       }))
     }
 
-    const savedInvoices = localStorage.getItem('invoices_list')
-    const invoices = safeParse(savedInvoices, [])
     localStorage.setItem('invoices_list', JSON.stringify([newInvoice, ...invoices]))
 
     setSelectedInvoice(newInvoice)
