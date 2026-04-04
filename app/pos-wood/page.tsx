@@ -74,6 +74,7 @@ export default function POSWood() {
   const [discountType, setDiscountType] = useState<'fixed' | 'percent'>('fixed')
   const [deliveryCharge, setDeliveryCharge] = useState(0)
   const [paidAmount, setPaidAmount] = useState(0)
+  const [checkoutError, setCheckoutError] = useState('')
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
 
@@ -111,6 +112,12 @@ export default function POSWood() {
 
   const handleCheckout = () => {
     if (cart.length === 0) return
+    setCheckoutError('')
+
+    if (selectedCustomer === 'Walk-in Customer' && paidAmount < total) {
+      setCheckoutError('Walk-in Customer cannot buy on due. Please pay the full amount.')
+      return
+    }
 
     // Update products stock
     const updatedProducts = products.map(product => {
@@ -170,6 +177,7 @@ export default function POSWood() {
     setDeliveryCharge(0)
     setPaidAmount(0)
     setCustomerSearchTerm('')
+    setCheckoutError('')
     setIsCheckoutSuccess(true)
   }
 
@@ -640,6 +648,13 @@ export default function POSWood() {
                 </div>
               </div>
             </div>
+            
+            {checkoutError && (
+              <div className="text-xs text-rose-500 font-medium bg-rose-50 p-2 rounded-lg border border-rose-100">
+                {checkoutError}
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-3 pt-1">
               <button className="py-3 px-4 bg-white border border-slate-200 rounded-xl font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
                 <Printer size={18} /> Bill

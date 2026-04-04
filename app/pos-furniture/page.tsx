@@ -69,6 +69,7 @@ export default function POSFurniture() {
   const [discountType, setDiscountType] = useState<'fixed' | 'percent'>('fixed')
   const [deliveryCharge, setDeliveryCharge] = useState(0)
   const [paidAmount, setPaidAmount] = useState(0)
+  const [checkoutError, setCheckoutError] = useState('')
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false)
   const [customers, setCustomers] = useState<any[]>([])
@@ -129,6 +130,12 @@ export default function POSFurniture() {
 
   const handleCheckout = () => {
     if (cart.length === 0) return
+    setCheckoutError('')
+
+    if (selectedCustomer === 'Walk-in Customer' && paidAmount < total) {
+      setCheckoutError('Walk-in Customer cannot buy on due. Please pay the full amount.')
+      return
+    }
 
     // Update stock in products
     const updatedProducts = products.map(product => {
@@ -181,6 +188,7 @@ export default function POSFurniture() {
     setDeliveryCharge(0)
     setPaidAmount(0)
     setCustomerSearchTerm('')
+    setCheckoutError('')
     setIsCheckoutSuccess(true)
   }
 
@@ -204,85 +212,67 @@ export default function POSFurniture() {
       <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-120px)]">
         {/* Left: Product Selection */}
         <div className="flex-1 flex flex-col gap-6 min-w-0">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="relative w-full md:w-96">
+          <div className="flex flex-col md:flex-row gap-4 items-center sticky top-0 z-20 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-md py-4 -mt-4 mb-2">
+            <div className="relative flex-1 w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
                 placeholder="Search furniture..." 
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-900 dark:text-slate-100"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div className="flex items-center gap-2">
-              <div className="flex bg-white border border-slate-200 rounded-xl p-1">
+            
+            <div className="flex gap-3 w-full md:w-auto items-end">
+              <div className="flex flex-col gap-1 flex-1 md:w-48">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Category</label>
+                <select
+                  value={activeCategory}
+                  onChange={(e) => {
+                    setActiveCategory(e.target.value)
+                    setActiveSubCategory('All')
+                  }}
+                  className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-700 dark:text-slate-300 appearance-none cursor-pointer"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1em' }}
+                >
+                  {categories.map(cat => (
+                    <option key={cat} value={cat}>{cat === 'All' ? 'All Categories' : cat}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex flex-col gap-1 flex-1 md:w-48">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Sub Category</label>
+                <select
+                  value={activeSubCategory}
+                  onChange={(e) => setActiveSubCategory(e.target.value)}
+                  disabled={activeCategory === 'All'}
+                  className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-slate-700 dark:text-slate-300 appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1em' }}
+                >
+                  <option value="All">All Sub-categories</option>
+                  {activeCategory !== 'All' && subCategoriesMap[activeCategory]?.map(sub => (
+                    <option key={sub} value={sub}>{sub}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-1 h-[42px]">
                 <button 
                   onClick={() => setViewMode('grid')}
-                  className={cn("p-1.5 rounded-lg transition-colors", viewMode === 'grid' ? "bg-slate-100 text-amber-600" : "text-slate-400")}
+                  className={cn("p-1.5 rounded-lg transition-colors flex items-center justify-center", viewMode === 'grid' ? "bg-slate-100 dark:bg-slate-800 text-amber-600 shadow-sm" : "text-slate-400")}
                 >
                   <LayoutGrid size={18} />
                 </button>
                 <button 
                   onClick={() => setViewMode('list')}
-                  className={cn("p-1.5 rounded-lg transition-colors", viewMode === 'list' ? "bg-slate-100 text-amber-600" : "text-slate-400")}
+                  className={cn("p-1.5 rounded-lg transition-colors flex items-center justify-center", viewMode === 'list' ? "bg-slate-100 dark:bg-slate-800 text-amber-600 shadow-sm" : "text-slate-400")}
                 >
                   <List size={18} />
                 </button>
               </div>
             </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setActiveCategory(cat)
-                    setActiveSubCategory('All')
-                  }}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all",
-                    activeCategory === cat 
-                      ? "bg-amber-600 text-white shadow-lg shadow-amber-600/20" 
-                      : "bg-white text-slate-600 border border-slate-200 hover:border-amber-500"
-                  )}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {activeCategory !== 'All' && subCategoriesMap[activeCategory] && (
-              <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                <button
-                  onClick={() => setActiveSubCategory('All')}
-                  className={cn(
-                    "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all",
-                    activeSubCategory === 'All'
-                      ? "bg-slate-800 text-white"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  )}
-                >
-                  All {activeCategory}
-                </button>
-                {subCategoriesMap[activeCategory].map(sub => (
-                  <button
-                    key={sub}
-                    onClick={() => setActiveSubCategory(sub)}
-                    className={cn(
-                      "px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all",
-                      activeSubCategory === sub
-                        ? "bg-amber-100 text-amber-700 border border-amber-200"
-                        : "bg-white text-slate-500 border border-slate-200 hover:border-amber-300"
-                    )}
-                  >
-                    {sub}
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
@@ -560,6 +550,13 @@ export default function POSFurniture() {
                 </div>
               </div>
             </div>
+            
+            {checkoutError && (
+              <div className="text-xs text-rose-500 font-medium bg-rose-50 p-2 rounded-lg border border-rose-100">
+                {checkoutError}
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-3 pt-1">
               <button className="py-4 px-4 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
                 <Printer size={18} /> A4 Print
