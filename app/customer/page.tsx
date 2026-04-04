@@ -5,7 +5,6 @@ import DashboardLayout from '@/components/DashboardLayout'
 import { Search, Plus, UserPlus, Phone, MapPin, MoreVertical, Mail, MessageSquare, FileText } from 'lucide-react'
 import { cn, safeParse } from '@/lib/utils'
 import Image from 'next/image'
-import AddCustomerModal from '@/components/AddCustomerModal'
 import Link from 'next/link'
 
 interface Customer {
@@ -51,7 +50,6 @@ export default function CustomerPage() {
     }
     return initialCustomers
   })
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
@@ -83,12 +81,12 @@ export default function CustomerPage() {
             <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-slate-100">Customer Directory</h1>
             <p className="text-slate-500 dark:text-slate-400">Manage your customer relationships and order history.</p>
           </div>
-          <button 
-            onClick={() => setIsModalOpen(true)}
+          <Link 
+            href="/customer/add"
             className="flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20"
           >
             <UserPlus size={18} /> Add New Customer
-          </button>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -202,11 +200,6 @@ export default function CustomerPage() {
         </div>
       </div>
 
-      <AddCustomerModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onAdd={handleAddCustomer}
-      />
     </DashboardLayout>
   )
 }
