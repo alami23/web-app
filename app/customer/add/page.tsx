@@ -1,22 +1,36 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import { User, Phone, MapPin, Mail, Save, ArrowLeft, Camera, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { safeParse } from '@/lib/utils'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function AddCustomerPage() {
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     address: '',
     type: 'Regular',
-    initialBalance: 0
+    initialBalance: 0,
+    photo: null as string | null
   })
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, photo: reader.result as string }))
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,8 +39,7 @@ export default function AddCustomerPage() {
       ...formData,
       totalOrders: 0,
       totalDue: formData.initialBalance,
-      lastPurchase: 'New Customer',
-      photo: null
+      lastPurchase: 'New Customer'
     }
     
     const saved = localStorage.getItem('customers_list')
@@ -60,10 +73,28 @@ export default function AddCustomerPage() {
             {/* Profile Photo Section */}
             <div className="flex flex-col items-center">
               <div className="relative group">
-                <div className="w-32 h-32 rounded-[2.5rem] bg-slate-50 dark:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 group-hover:border-amber-500 group-hover:text-amber-500 transition-all cursor-pointer overflow-hidden">
-                  <Camera size={40} strokeWidth={1.5} />
+                <input 
+                  type="file" 
+                  ref={fileInputRef}
+                  onChange={handlePhotoUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-32 h-32 rounded-[2.5rem] bg-slate-50 dark:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-400 group-hover:border-amber-500 group-hover:text-amber-500 transition-all cursor-pointer overflow-hidden relative"
+                >
+                  {formData.photo ? (
+                    <Image src={formData.photo} alt="Preview" fill className="object-cover" />
+                  ) : (
+                    <Camera size={40} strokeWidth={1.5} />
+                  )}
                 </div>
-                <button type="button" className="absolute -bottom-2 -right-2 p-2.5 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all">
+                <button 
+                  type="button" 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute -bottom-2 -right-2 p-2.5 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-amber-600 transition-all"
+                >
                   <Plus size={18} />
                 </button>
               </div>

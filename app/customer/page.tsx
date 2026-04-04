@@ -7,6 +7,8 @@ import { cn, safeParse } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import AddCustomerModal from '@/components/AddCustomerModal'
+
 interface Customer {
   id: string
   name: string
@@ -27,6 +29,7 @@ const initialCustomers: Customer[] = [
 ]
 
 export default function CustomerPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [customersList, setCustomersList] = useState<Customer[]>(() => {
     if (typeof window !== 'undefined') {
       const savedCustomers = localStorage.getItem('customers_list')
@@ -81,12 +84,12 @@ export default function CustomerPage() {
             <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-slate-100">Customer Directory</h1>
             <p className="text-slate-500 dark:text-slate-400">Manage your customer relationships and order history.</p>
           </div>
-          <Link 
-            href="/customer/add"
+          <button 
+            onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 px-4 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold hover:bg-amber-700 transition-all shadow-lg shadow-amber-600/20"
           >
             <UserPlus size={18} /> Add New Customer
-          </Link>
+          </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -200,6 +203,11 @@ export default function CustomerPage() {
         </div>
       </div>
 
+      <AddCustomerModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onAdd={handleAddCustomer}
+      />
     </DashboardLayout>
   )
 }
