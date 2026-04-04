@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/DashboardLayout'
 import Image from 'next/image'
-import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Filter, Pencil, Check, X, Camera, Upload, UserPlus } from 'lucide-react'
+import { Search, Plus, Minus, Trash2, Printer, ShoppingCart, Filter, Pencil, Check, X, Camera, Upload, UserPlus, RotateCcw } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
 import { cn, safeParse } from '@/lib/utils'
 import AddCustomerModal from '@/components/AddCustomerModal'
@@ -414,43 +414,54 @@ export default function POSWood() {
               </h2>
             </div>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
-                  <input 
-                    type="text"
-                    list="customer-list"
-                    placeholder="Search or Select Customer"
-                    className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors"
-                    value={selectedCustomer}
-                    onChange={(e) => setSelectedCustomer(e.target.value)}
-                  />
-                  <datalist id="customer-list">
-                    <option value="Walk-in Customer" />
-                    {customers.map(c => (
-                      <option key={c.id} value={c.name}>{c.phone}</option>
-                    ))}
-                  </datalist>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button 
-                    onClick={() => setIsAddingCustomer(true)}
-                    className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
-                    title="Add New Customer"
-                  >
-                    <UserPlus size={18} />
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setCart([])
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                <input 
+                  type="text"
+                  placeholder="Search customer..."
+                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs outline-none focus:border-amber-500 transition-colors"
+                  onChange={(e) => {
+                    const term = e.target.value.toLowerCase()
+                    if (term === '') {
                       setSelectedCustomer('Walk-in Customer')
-                    }}
-                    className="p-2.5 bg-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center"
-                    title="Clear All"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
+                    } else {
+                      const found = customers.find(c => 
+                        c.name.toLowerCase().includes(term) || 
+                        c.phone.includes(term)
+                      )
+                      if (found) setSelectedCustomer(found.name)
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <select 
+                  className="flex-1 p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-amber-500 transition-colors"
+                  value={selectedCustomer}
+                  onChange={(e) => setSelectedCustomer(e.target.value)}
+                >
+                  <option value="Walk-in Customer">Walk-in Customer</option>
+                  {customers.map(c => (
+                    <option key={c.id} value={c.name}>{c.name} ({c.phone})</option>
+                  ))}
+                </select>
+                <button 
+                  onClick={() => setIsAddingCustomer(true)}
+                  className="p-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition-colors shadow-sm flex items-center justify-center"
+                  title="Add New Customer"
+                >
+                  <UserPlus size={18} />
+                </button>
+                <button 
+                  onClick={() => {
+                    setCart([])
+                    setSelectedCustomer('Walk-in Customer')
+                  }}
+                  className="p-2.5 bg-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition-all shadow-sm flex items-center justify-center"
+                  title="Reset Order"
+                >
+                  <RotateCcw size={18} />
+                </button>
               </div>
             </div>
           </div>

@@ -6,9 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function safeParse<T>(value: string | null, defaultValue: T): T {
-  if (!value || value === 'undefined') return defaultValue
+  if (!value) return defaultValue
+  const trimmed = value.trim()
+  if (trimmed === 'undefined' || trimmed === '') return defaultValue
   try {
-    return JSON.parse(value) as T
+    return JSON.parse(trimmed) as T
   } catch (e) {
     console.error('Failed to parse JSON', e)
     return defaultValue
